@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Zoekresultaten — Nationaal Archief</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .results-layout { display: grid; grid-template-columns: 280px 1fr; gap: 32px; max-width: 1280px; margin: 0 auto; padding: 24px; }
+  .facets { position: sticky; top: 80px; align-self: start; max-height: calc(100vh - 100px); overflow: auto; }
+  .facets h3 { font-family: 'Fraunces', serif; font-size: 18px; margin: 0 0 12px; }
+  .facet-group { padding: 14px 0; border-top: 1px solid #e3dfd6; }
+  .facet-group:first-of-type { border-top: 0; padding-top: 0; }
+  .facet-group h4 { font-size: 12.5px; text-transform: uppercase; letter-spacing: .1em; color: #5d6470; margin: 0 0 10px; font-weight: 600; }
+  .facet-group label { display: flex; justify-content: space-between; padding: 4px 0; font-size: 14px; color: #39414e; cursor: pointer; }
+  .facet-group label:hover { color: #0f3360; }
+  .facet-group .lbl-text { display: flex; align-items: center; gap: 8px; }
+  .facet-group input[type=checkbox] { accent-color: #154273; width: 16px; height: 16px; }
+  .facet-group .count { font-size: 12px; color: #7e8492; font-variant-numeric: tabular-nums; }
+  .facet-group input[type=number] { width: 90px; padding: 6px 8px; border: 1px solid #cfc9bc; border-radius: 4px; font-size: 13px; font-variant-numeric: tabular-nums; }
+
+  .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+  .results-summary { font-size: 14px; color: #5d6470; }
+  .results-summary strong { color: #0e1b2c; font-weight: 600; }
+
+  .result-item { padding: 20px 0; border-bottom: 1px solid #e3dfd6; }
+  .result-item .type-tag { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: #5d6470; font-weight: 600; padding: 2px 8px; background: #f7f6f2; border-radius: 4px; margin-bottom: 8px; }
+  .result-item .type-tag.archive { background: #eef3fa; color: #0f3360; }
+  .result-item h3 { font-family: 'Fraunces', serif; font-size: 22px; margin: 0 0 6px; }
+  .result-item h3 a { color: #0f3360; text-decoration: none; }
+  .result-item h3 a:hover { text-decoration: underline; }
+  .result-item .meta-line { font-size: 13px; color: #5d6470; margin-bottom: 8px; font-variant-numeric: tabular-nums; }
+  .result-item .meta-line .toegang { font-family: ui-monospace, monospace; }
+  .result-item .snippet { font-size: 14.5px; color: #39414e; line-height: 1.55; }
+  .result-item .snippet mark { background: #fef3c7; padding: 1px 2px; border-radius: 2px; }
+  .result-item .stats { font-size: 12.5px; color: #5d6470; margin-top: 10px; display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .featured-banner { background: linear-gradient(135deg, #eef3fa 0%, #ffffff 100%); border: 1px solid #dbe5f2; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 18px; }
+  .featured-banner .icon { width: 44px; height: 44px; border-radius: 8px; background: #154273; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .featured-banner h3 { font-family: 'Fraunces', serif; font-size: 18px; margin: 0 0 4px; color: #0e1b2c; }
+  .featured-banner p { font-size: 13.5px; color: #5d6470; margin: 0; }
+  .featured-banner a { margin-left: auto; flex-shrink: 0; }
+
+  .pagination { display: flex; justify-content: center; gap: 4px; margin: 32px 0; }
+  .pagination a, .pagination span { padding: 8px 14px; border-radius: 6px; font-size: 14px; color: #39414e; text-decoration: none; }
+  .pagination a:hover { background: #eef3fa; color: #0f3360; }
+  .pagination .current { background: #0f3360; color: #fff; font-weight: 500; }
+
+  @media (max-width: 1024px) {
+    .results-layout { grid-template-columns: 1fr; }
+    .facets { position: static; max-height: none; }
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<a href="#main" class="skip">Direct naar de resultaten</a>
+
+<div class="top-strip">
+  <div class="container">
+    <span>Een onderdeel van het Ministerie van Onderwijs, Cultuur en Wetenschap</span>
+    <div style="display:flex; gap:20px;"><a href="#">Studiezaal reserveren</a><a href="#">Open data</a><a href="#" hreflang="en" lang="en">English</a></div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container">
+    <a href="home.html" class="brand">
+      <span class="brand-logo display">NA</span>
+      <span class="brand-name"><strong>Nationaal Archief</strong><small>Het geheugen van Nederland</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Hoofdmenu">
+      <a href="home.html" class="active">Onderzoeken</a>
+      <a href="zoekhulpen.html">Zoekhulpen</a>
+      <a href="#">Beleven</a>
+      <a href="#">Archiveren</a>
+    </nav>
+    <form class="global-search" role="search" action="zoeken.html" method="get">
+      <label for="gq" class="sr-only">Zoek in alle archieven</label>
+      <div class="global-search-form">
+        <input id="gq" name="q" type="search" value="VOC" />
+        <button type="submit" aria-label="Zoeken"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      </div>
+    </form>
+    <a href="mandje.html" class="basket-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Mandje <span class="badge" id="basket-badge">0</span>
+    </a>
+    <a href="#" class="icon-btn" aria-label="Mijn account"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+  </div>
+</header>
+
+<main id="main" class="results-layout">
+
+  <!-- FACETS -->
+  <aside class="facets" aria-label="Verfijnen">
+    <h3>Verfijn resultaten</h3>
+
+    <div class="facet-group">
+      <h4>Type bron</h4>
+      <label><span class="lbl-text"><input type="checkbox" checked/> Archiefinventarissen</span><span class="count">42</span></label>
+      <label><span class="lbl-text"><input type="checkbox"/> Personen / indexen</span><span class="count">8.412</span></label>
+      <label><span class="lbl-text"><input type="checkbox"/> Foto's</span><span class="count">1.207</span></label>
+      <label><span class="lbl-text"><input type="checkbox"/> Kaarten & tekeningen</span><span class="count">389</span></label>
+      <label><span class="lbl-text"><input type="checkbox"/> Boeken & periodieken</span><span class="count">156</span></label>
+    </div>
+
+    <div class="facet-group">
+      <h4>Beschikbaarheid</h4>
+      <label><span class="lbl-text"><input type="checkbox"/> <span class="dot" style="background:#16a34a"></span> Online beschikbaar</span><span class="count">5.812</span></label>
+      <label><span class="lbl-text"><input type="checkbox"/> <span class="dot" style="background:#d97706"></span> Alleen fysiek</span><span class="count">2.103</span></label>
+      <label><span class="lbl-text"><input type="checkbox"/> <span class="dot" style="background:#dc2626"></span> Beperkt</span><span class="count">512</span></label>
+    </div>
+
+    <div class="facet-group">
+      <h4>Periode</h4>
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom: 6px;">
+        <input type="number" placeholder="vanaf" value="1602" min="1500" max="2025"/>
+        <span style="color:#5d6470;">tot</span>
+        <input type="number" placeholder="tot" value="1811" min="1500" max="2025"/>
+      </div>
+      <p style="font-size:12px; color:#5d6470; margin:0;">Bv. 1700–1750</p>
+    </div>
+
+    <div class="facet-group">
+      <h4>Archief</h4>
+      <label><span class="lbl-text"><input type="checkbox"/> 1.04.02 VOC</span><span class="count">17.297</span></label>
+      <label><span class="lbl-text"><input type="checkbox"/> 1.05.01.02 WIC</span><span class="count">1.582</span></label>
+      <label><span class="lbl-text"><input type="checkbox"/> 2.10.01 Koloniën</span><span class="count">4.860</span></label>
+      <label><span class="lbl-text"><input type="checkbox"/> 1.10.79 Radermacher</span><span class="count">142</span></label>
+      <a href="#" class="lnk" style="font-size:12.5px; display:inline-block; margin-top:8px;">+ 18 meer archieven</a>
+    </div>
+
+    <div class="facet-group">
+      <h4>Plaats genoemd</h4>
+      <label><span class="lbl-text"><input type="checkbox"/> Batavia</span><span class="count">3.412</span></label>
+      <label><span class="lbl-text"><input type="checkbox"/> Amsterdam</span><span class="count">2.890</span></label>
+      <label><span class="lbl-text"><input type="checkbox"/> Kaap de Goede Hoop</span><span class="count">1.142</span></label>
+      <label><span class="lbl-text"><input type="checkbox"/> Coromandel</span><span class="count">521</span></label>
+    </div>
+
+    <div class="facet-group">
+      <h4>Taal</h4>
+      <label><span class="lbl-text"><input type="checkbox"/> Nederlands</span><span class="count">9.124</span></label>
+      <label><span class="lbl-text"><input type="checkbox"/> Latijn</span><span class="count">82</span></label>
+    </div>
+  </aside>
+
+  <!-- RESULTS -->
+  <div>
+    <nav class="text-[12px] mono text-mute mb-3" aria-label="Kruimelpad" style="font-size:12px;color:#5d6470;margin-bottom:12px;">
+      <ol style="list-style:none; padding:0; margin:0; display:flex; gap:8px;">
+        <li><a href="home.html" style="color:inherit;">Home</a></li>
+        <li style="color:#b3c7e2;" aria-hidden="true">/</li>
+        <li><span style="color:#0e1b2c;">Zoeken</span></li>
+      </ol>
+    </nav>
+
+    <h1 style="font-family:'Fraunces',serif; font-size:28px; margin:0 0 4px; line-height: 1.1;">Resultaten voor <span style="color:#0f3360;">"VOC"</span></h1>
+    <p style="font-size:14px; color:#5d6470; margin:0 0 24px;"><strong style="color:#0e1b2c;">9.520 resultaten</strong> · gevonden in 0,18 seconden</p>
+
+    <!-- Featured zoekhulp banner -->
+    <div class="featured-banner">
+      <div class="icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4.5"/><path d="M12 18h.01"/></svg>
+      </div>
+      <div>
+        <h3>Zoekhulp: Koloniale geschiedenis</h3>
+        <p>Onderzoekt u VOC-dienaren, schepen of vestigingen? Onze zoekhulp wijst u naar de juiste registers en stamboeken.</p>
+      </div>
+      <a href="zoekhulpen.html#koloniaal" class="btn-secondary">Open zoekhulp →</a>
+    </div>
+
+    <div class="results-header">
+      <p class="results-summary">Toon <strong>1–10</strong> van <strong>9.520</strong></p>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <label for="sort" style="font-size:12.5px; color:#5d6470;">Sorteer:</label>
+        <select id="sort" style="padding:6px 10px; border:1px solid #e3dfd6; border-radius:6px; font-size:13px;">
+          <option>Relevantie</option>
+          <option>Datum (oudste eerst)</option>
+          <option>Datum (nieuwste eerst)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- TOP RESULT -->
+    <article class="result-item">
+      <span class="type-tag archive">Archief</span>
+      <h3><a href="index.html">Verenigde Oost-Indische Compagnie (<mark>VOC</mark>)</a></h3>
+      <p class="meta-line"><span class="toegang">1.04.02</span> · 1602–1795 · Nationaal Archief, Den Haag</p>
+      <p class="snippet">Inventaris van het archief van de eerste multinational ter wereld. Bevat de archieven van de Heeren XVII en de zes kamers (Amsterdam, Zeeland, Delft, Rotterdam, Hoorn, Enkhuizen), met resoluties, scheepsjournalen, correspondentie en overgekomen brieven uit de vestigingen in Azië, de <mark>Kaap</mark> en China.</p>
+      <p class="stats">
+        <span><strong>17.297</strong> inventarisnummers</span>
+        <span class="status-online">● 9.812 online beschikbaar</span>
+        <span>1.279 m¹</span>
+      </p>
+    </article>
+
+    <article class="result-item">
+      <span class="type-tag archive">Archief</span>
+      <h3><a href="#">Tweede West-Indische Compagnie (W<mark>IC</mark>)</a></h3>
+      <p class="meta-line"><span class="toegang">1.05.01.02</span> · 1674–1795 · Nationaal Archief, Den Haag</p>
+      <p class="snippet">Archief van de tweede West-Indische Compagnie, opgericht in 1674 als opvolger van de eerste WIC. Bevat materiaal over Suriname, Curaçao, Sint-Eustatius, en de slavenhandel.</p>
+      <p class="stats">
+        <span><strong>1.582</strong> inventarisnummers</span>
+        <span class="status-online">● 412 online</span>
+      </p>
+    </article>
+
+    <article class="result-item">
+      <span class="type-tag">Inv.nr</span>
+      <h3><a href="detail.html?n=20">Octrooi van de Staten-Generaal inzake de invoering van het intestaat erfrecht in de vestigingen van de <mark>VOC</mark></a></h3>
+      <p class="meta-line"><span class="toegang">1.04.02</span> · inv.nr 20 · 17 augustus 1661</p>
+      <p class="snippet">Origineel charter op perkament. Regelt versterferfrecht in <mark>Batavia</mark>, Coromandel, de Kaap en andere <mark>vestigingen van de VOC</mark>. Beperkt fysiek raadpleegbaar wegens fragiele staat.</p>
+      <p class="stats"><span class="status-offline">● Alleen fysiek raadpleegbaar</span></p>
+    </article>
+
+    <article class="result-item">
+      <span class="type-tag">Inv.nr</span>
+      <h3><a href="detail.html?n=2">Verlenging van het octrooi door de Staten-Generaal (21 jaar)</a></h3>
+      <p class="meta-line"><span class="toegang">1.04.02</span> · inv.nr 2 · 1622</p>
+      <p class="snippet">Verlenging van het oprichtingsoctrooi van de <mark>VOC</mark> uit 1602 met 21 jaar, met enkele wijzigingen. Charter op perkament, gedigitaliseerd.</p>
+      <p class="stats"><span class="status-online">● Online beschikbaar — 3 scans</span></p>
+    </article>
+
+    <article class="result-item">
+      <span class="type-tag">Inv.nr</span>
+      <h3><a href="detail.html?n=24">Minuut-resoluties van de Heeren XVII</a></h3>
+      <p class="meta-line"><span class="toegang">1.04.02</span> · inv.nr 24 · 23 sep 1654 – 23 dec 1662</p>
+      <p class="snippet">Net-versie van de minuut-resoluties van de gewone en buitengewone vergaderingen van de bewindhebbers van de <mark>VOC</mark>, met bijlagen.</p>
+      <p class="stats"><span class="status-online">● Online beschikbaar — 612 scans</span></p>
+    </article>
+
+    <article class="result-item">
+      <span class="type-tag">Persoon</span>
+      <h3><a href="#">Pieter de Jonge (geb. ca. 1640)</a></h3>
+      <p class="meta-line">VOC-dienaar · vertrokken Texel 1665, aankomst Batavia 1666</p>
+      <p class="snippet">In de monsterrol van schip <em>De Goede Hoop</em>: <mark>VOC</mark>-dienaar uit Amsterdam, functie matroos. Genoemd in scheepssoldijboek 5232.</p>
+    </article>
+
+    <article class="result-item">
+      <span class="type-tag">Foto</span>
+      <h3><a href="#">Pakhuis "Oost-Indisch Huis" Amsterdam, 1925</a></h3>
+      <p class="meta-line">Fotocollectie · 1925 · zwart-wit · 18×24 cm</p>
+      <p class="snippet">Het voormalige hoofdkantoor van de <mark>VOC</mark> in Amsterdam aan de Oude Hoogstraat, in 1925 nog in gebruik als kantoor.</p>
+    </article>
+
+    <div class="pagination" role="navigation" aria-label="Paginering">
+      <span style="opacity:.4">←</span>
+      <a href="#" class="current" aria-current="page">1</a>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <a href="#">4</a>
+      <a href="#">5</a>
+      <span>…</span>
+      <a href="#">952</a>
+      <a href="#">→</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div>
+      <a href="home.html" class="brand"><span class="brand-logo display">NA</span><span class="brand-name"><strong>Nationaal Archief</strong></span></a>
+      <p style="color:#5d6470; font-size:13.5px; margin-top:12px; max-width:320px;">Wij bewaren en delen het archief van de Nederlandse rijksoverheid en zijn voorgangers — meer dan 137 km aan documenten.</p>
+    </div>
+    <div><h4>Onderzoek</h4><ul><li><a href="home.html">Zoeken</a></li><li><a href="zoekhulpen.html">Zoekhulpen</a></li><li><a href="#">Open data</a></li></ul></div>
+    <div><h4>Bezoek</h4><ul><li><a href="#">Studiezaal</a></li><li><a href="#">Tentoonstellingen</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div><h4>Bron</h4><ul><li style="font-size:12.5px;color:#5d6470;">Herontwerp/concept.</li><li><a href="https://www.nationaalarchief.nl" target="_blank" rel="noopener">nationaalarchief.nl</a></li></ul></div>
+  </div>
+  <div class="legal"><div class="legal-row"><span>© Nationaal Archief — herontwerp / concept</span><div style="display:flex; gap:16px;"><a href="#">Toegankelijkheid</a><a href="#">Privacy</a><a href="#">Cookies</a></div></div></div>
+</footer>
+
+<script>
+const basket = JSON.parse(localStorage.getItem('voc-basket') || '[]');
+document.getElementById('basket-badge').textContent = basket.length;
+</script>
+</body>
+</html>

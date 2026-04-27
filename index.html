@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VOC · 1.04.02 — Inventaris — Nationaal Archief</title>
+<meta name="description" content="Inventaris van het VOC-archief (1602–1795), toegang 1.04.02." />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .archive-hero { border-bottom: 1px solid #e3dfd6; background: #f7f6f2; }
+  .archive-hero .container { max-width: 1280px; margin: 0 auto; padding: 36px 24px; }
+  .archive-hero h1 { font-family: 'Fraunces', serif; font-size: 48px; line-height: 1.05; margin: 12px 0 16px; letter-spacing: -0.018em; }
+  .archive-hero h1 small { color: #5d6470; font-weight: 500; }
+  .archive-hero .kicker { font-size: 12px; text-transform: uppercase; letter-spacing: .14em; color: #0f3360; font-weight: 600; }
+  .archive-hero .lead { font-size: 15px; color: #39414e; max-width: 640px; line-height: 1.6; margin: 0; }
+  .archive-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 24px; padding-top: 24px; border-top: 1px solid #e3dfd6; }
+  .archive-stats dt { font-size: 12px; color: #5d6470; margin-bottom: 4px; }
+  .archive-stats dd { font-family: 'Fraunces', serif; font-size: 22px; color: #0e1b2c; margin: 0; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .archive-stats dd small { font-size: 13px; color: #5d6470; font-weight: 400; }
+  .archive-stats dd.highlight { color: #15803d; }
+
+  /* Contextual zoekhulp banners */
+  .zoekhulp-banners { max-width: 1280px; margin: 16px auto 0; padding: 0 24px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .zh-banner { background: #eef3fa; border: 1px solid #dbe5f2; border-radius: 8px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; transition: all .15s; }
+  .zh-banner:hover { background: #dbe5f2; border-color: #154273; }
+  .zh-banner .icon { width: 36px; height: 36px; border-radius: 8px; background: #154273; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .zh-banner .text strong { display: block; font-size: 14px; color: #0f3360; }
+  .zh-banner .text small { font-size: 12.5px; color: #5d6470; }
+  .zh-banner .arrow { margin-left: auto; color: #0f3360; font-size: 18px; }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+  /* Section header in list */
+  .section-head .crumb a { color: #0f3360; text-decoration: none; }
+  .section-head .crumb a:hover { text-decoration: underline; }
+
+  /* Modal — only for vraag-scan */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(10,37,71,.55); backdrop-filter: blur(2px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .modal { background: #ffffff; border-radius: 12px; width: 100%; max-width: 540px; max-height: 90vh; overflow: auto; box-shadow: 0 30px 80px -20px rgba(0,0,0,.4); }
+  .modal-head { padding: 20px 24px; border-bottom: 1px solid #e3dfd6; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .modal-head h2 { font-family: 'Fraunces', serif; font-size: 22px; margin: 0; color: #0e1b2c; }
+  .modal-head p { font-size: 13px; color: #5d6470; margin: 4px 0 0; }
+  .modal-body { padding: 20px 24px; }
+  .modal-foot { padding: 16px 24px; border-top: 1px solid #e3dfd6; background: #f7f6f2; display: flex; justify-content: flex-end; gap: 10px; border-radius: 0 0 12px 12px; }
+  .modal-close { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #5d6470; background: none; border: 0; cursor: pointer; }
+  .modal-close:hover { background: #f3f7fc; color: #0f3360; }
+  .field { margin-bottom: 14px; }
+  .field > label { display: block; font-size: 13px; font-weight: 500; color: #0e1b2c; margin-bottom: 5px; }
+  .field input, .field select, .field textarea { width: 100%; padding: 9px 12px; border: 1px solid #cfc9bc; border-radius: 6px; font-size: 14px; font-family: inherit; background: #fff; }
+  .field input:focus, .field select:focus { outline: 2px solid #154273; border-color: #154273; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 24px; right: 24px; background: #0f3360; color: #fff; padding: 12px 18px; border-radius: 8px; font-size: 14px; box-shadow: 0 12px 30px -8px rgba(0,0,0,.25); z-index: 50; display: flex; align-items: center; gap: 10px; transform: translateY(100px); opacity: 0; transition: all .25s; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast a { color: #b3c7e2; text-decoration: underline; }
+
+  @media (max-width: 1024px) {
+    .archive-stats { grid-template-columns: repeat(2, 1fr); }
+    .zoekhulp-banners { grid-template-columns: 1fr; }
+    .archive-hero h1 { font-size: 34px; }
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<a href="#main" class="skip">Direct naar de inventaris</a>
+
+<div class="top-strip">
+  <div class="container">
+    <span>Een onderdeel van het Ministerie van Onderwijs, Cultuur en Wetenschap</span>
+    <div style="display:flex; gap:20px;"><a href="#">Studiezaal reserveren</a><a href="#">Open data</a><a href="#" hreflang="en" lang="en">English</a></div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container">
+    <a href="home.html" class="brand">
+      <span class="brand-logo display">NA</span>
+      <span class="brand-name"><strong>Nationaal Archief</strong><small>Het geheugen van Nederland</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Hoofdmenu">
+      <a href="home.html" class="active">Onderzoeken</a>
+      <a href="zoekhulpen.html">Zoekhulpen</a>
+      <a href="#">Beleven</a>
+      <a href="#">Archiveren</a>
+    </nav>
+    <form class="global-search" role="search" action="zoeken.html" method="get">
+      <label for="gq" class="sr-only">Zoek in alle archieven</label>
+      <div class="global-search-form">
+        <input id="gq" name="q" type="search" placeholder="Zoek archieven, personen, scans…"/>
+        <button type="submit" aria-label="Zoeken"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      </div>
+    </form>
+    <a href="mandje.html" class="basket-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Mandje <span class="badge" id="basket-badge">0</span>
+    </a>
+    <a href="#" class="icon-btn" aria-label="Mijn account"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="archive-hero" aria-labelledby="archive-title">
+  <div class="container">
+    <nav style="font-size:12px; color:#5d6470; margin-bottom:8px;" aria-label="Kruimelpad">
+      <ol style="display:flex; gap:8px; padding:0; margin:0; list-style:none;">
+        <li><a href="home.html" style="color:inherit;">Home</a></li>
+        <li style="color:#b3c7e2;" aria-hidden="true">/</li>
+        <li><a href="zoeken.html" style="color:inherit;">Inventarissen</a></li>
+        <li style="color:#b3c7e2;" aria-hidden="true">/</li>
+        <li><span class="num" style="color:#0e1b2c;">1.04.02</span></li>
+      </ol>
+    </nav>
+    <p class="kicker">Toegang 1.04.02 · Compagniesarchief</p>
+    <h1 id="archive-title">Verenigde Oost-Indische Compagnie <small>(VOC)</small></h1>
+    <p class="lead">Inventaris van het archief van de eerste multinational ter wereld — opgericht in 1602, opgeheven in 1795. Bevat de archieven van de Heeren XVII en de zes kamers, met resoluties, scheepsjournalen, correspondentie en overgekomen brieven uit de vestigingen in Azië, de Kaap en China.</p>
+    <dl class="archive-stats">
+      <div><dt>Periode</dt><dd>1602–1795 <small>(1811)</small></dd></div>
+      <div><dt>Inventarisnummers</dt><dd>17.297</dd></div>
+      <div><dt>Online beschikbaar</dt><dd class="highlight">9.812 <small>(57%)</small></dd></div>
+      <div><dt>Taal</dt><dd>Nederlands</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- CONTEXTUAL ZOEKHULP BANNERS -->
+<div class="zoekhulp-banners">
+  <a href="zoekhulpen.html#koloniaal" class="zh-banner">
+    <span class="icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18l9-15 9 15"/><path d="M5 22h14"/><path d="M12 2v20"/></svg></span>
+    <span class="text">
+      <strong>Onderzoekt u koloniale geschiedenis?</strong>
+      <small>Gebruik onze zoekhulp Koloniale geschiedenis voor VOC-vestigingen, schepen en bestuur.</small>
+    </span>
+    <span class="arrow" aria-hidden="true">→</span>
+  </a>
+  <a href="zoekhulpen.html#familiegeschiedenis" class="zh-banner">
+    <span class="icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+    <span class="text">
+      <strong>Zoekt u een VOC-dienaar?</strong>
+      <small>Onze zoekhulp Familiegeschiedenis wijst u naar scheepssoldijboeken en monsterrollen.</small>
+    </span>
+    <span class="arrow" aria-hidden="true">→</span>
+  </a>
+</div>
+
+<!-- TABS -->
+<div style="border-bottom: 1px solid #e3dfd6; margin-top: 24px;">
+  <div class="container" style="display:flex; align-items:center;" role="tablist" aria-label="Archiefweergaves">
+    <button class="tab" role="tab" aria-selected="false" data-view="overview">Beschrijving</button>
+    <button class="tab" role="tab" aria-selected="true"  data-view="inventory">Inventaris</button>
+    <button class="tab" role="tab" aria-selected="false" data-view="info">Verantwoording</button>
+
+    <details class="ml-auto relative" style="margin-left:auto;">
+      <summary class="inline-flex items-center gap-2 text-[13px] text-mute hover:text-na-700 px-3 py-2 cursor-pointer" style="display:inline-flex; align-items:center; gap:8px; padding:8px 12px; font-size:13px; color:#5d6470;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4.5"/><path d="M12 18h.01"/></svg>
+        Tips voor deze pagina
+      </summary>
+      <div class="pop pop-right" role="dialog" style="width:300px;">
+        <h2 style="font-family:'Fraunces',serif; font-size:16px; margin:0 0 10px;">Snel aan de slag</h2>
+        <ul style="list-style:none; padding:0; margin:0; font-size:13.5px; color:#39414e; line-height:1.5;">
+          <li style="padding:4px 0;">· Filter de lijst met de balk hieronder.</li>
+          <li style="padding:4px 0;">· Klik een rij voor het detail.</li>
+          <li style="padding:4px 0;">· "<span class="status-online" style="font-weight:600;">Online</span>" stukken bekijkt u direct.</li>
+          <li style="padding:4px 0;">· Voor "<span class="status-offline" style="font-weight:600;">Fysiek</span>" voegt u toe aan het mandje en reserveert u de studiezaal.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<main id="main" class="container" style="padding-top: 24px; padding-bottom: 24px;">
+
+  <!-- INVENTARIS -->
+  <section id="view-inventory" role="tabpanel">
+
+    <!-- FILTER TOOLBAR -->
+    <div class="filter-bar" id="filter-panel" aria-label="Filters" style="margin-bottom:16px;">
+      <div class="relative" style="position:relative; flex:1; min-width:240px; max-width:380px;">
+        <label for="search" class="sr-only">Zoek binnen deze inventaris</label>
+        <svg style="position:absolute; left:12px; top:12px; color:#5d6470;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="search" type="search" placeholder="Zoek op nummer, titel of jaartal…" style="width:100%; height:40px; padding:0 12px 0 36px; border:1px solid #e3dfd6; border-radius:6px; font-size:14px;"/>
+      </div>
+
+      <span style="font-size:12.5px; color:#5d6470;" class="hidden lg:inline">Toon:</span>
+
+      <label class="checkbox-pill">
+        <input type="checkbox" data-status="digi"/>
+        <span class="dot" style="background:#16a34a"></span>
+        Online <span class="count" id="cnt-digi">—</span>
+      </label>
+      <label class="checkbox-pill">
+        <input type="checkbox" data-status="phys"/>
+        <span class="dot" style="background:#d97706"></span>
+        Fysiek <span class="count" id="cnt-phys">—</span>
+      </label>
+      <label class="checkbox-pill">
+        <input type="checkbox" data-status="restr"/>
+        <span class="dot" style="background:#dc2626"></span>
+        Beperkt <span class="count" id="cnt-restr">—</span>
+      </label>
+
+      <details class="relative" style="position:relative;">
+        <summary class="checkbox-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <span id="period-label">Periode</span>
+        </summary>
+        <div class="pop">
+          <p style="font-size:12px; color:#5d6470; margin:0 0 10px;">Vul jaartallen in (1602–1795).</p>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <label style="font-size:12px;"><span style="display:block; margin-bottom:4px;">Vanaf</span><input id="yr-from" type="number" min="1602" max="1795" value="1602" class="num" style="width:100%; padding:6px 8px; border:1px solid #cfc9bc; border-radius:4px;"/></label>
+            <label style="font-size:12px;"><span style="display:block; margin-bottom:4px;">Tot en met</span><input id="yr-to" type="number" min="1602" max="1795" value="1795" class="num" style="width:100%; padding:6px 8px; border:1px solid #cfc9bc; border-radius:4px;"/></label>
+          </div>
+          <button id="yr-apply" type="button" style="margin-top:10px; width:100%; height:34px; background:#0f3360; color:#fff; border:0; border-radius:6px; font-size:13px; cursor:pointer;">Toepassen</button>
+        </div>
+      </details>
+
+      <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+        <label for="sort" style="font-size:12.5px; color:#5d6470;">Sorteer:</label>
+        <select id="sort" style="font-size:14px; border:1px solid #e3dfd6; border-radius:6px; padding:6px 10px; background:#fff;">
+          <option value="nr">Nummer (oplopend)</option>
+          <option value="year">Jaartal (oplopend)</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px; min-height:28px;">
+      <div id="chips" style="display:flex; flex-wrap:wrap; gap:8px; flex:1;"></div>
+      <button id="reset-filters" type="button" style="font-size:13px; color:#0f3360; background:none; border:0; cursor:pointer; text-decoration:underline;" hidden>Wis alle filters</button>
+    </div>
+
+    <div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="result-announce"></div>
+
+    <!-- LIST (full width) -->
+    <div style="border:1px solid #e3dfd6; border-radius:8px; overflow:hidden; background:#fff;">
+      <div class="listy" style="max-height: 70vh;">
+        <div class="grid-row row-header" role="row" aria-hidden="true">
+          <span>Nummer</span>
+          <span>Beschrijving</span>
+          <span>Datering</span>
+          <span style="text-align:right;">Status</span>
+        </div>
+        <div id="rows" role="listbox" aria-label="Inventarisitems" tabindex="0"></div>
+      </div>
+    </div>
+
+    <p style="margin-top:12px; font-size:13px; color:#5d6470; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+      <span id="result-count">— resultaten</span>
+      <span style="display:flex; gap:14px; align-items:center;">
+        <a href="#" class="lnk">Toon alle 17.297 nummers</a>
+        <span style="color:#7e8492;" aria-hidden="true">·</span>
+        <a href="#" class="lnk">Download als PDF</a>
+      </span>
+    </p>
+  </section>
+
+  <!-- BESCHRIJVING -->
+  <section id="view-overview" role="tabpanel" class="hidden" style="display:grid; grid-template-columns:2fr 1fr; gap:48px;">
+    <article style="max-width:680px;">
+      <h2 style="font-family:'Fraunces',serif; font-size:30px; margin:0 0 16px;">Over dit archief</h2>
+      <p style="font-size:15px; color:#39414e; line-height:1.65;">De Verenigde Oost-Indische Compagnie werd op 20 maart 1602 opgericht door de Staten-Generaal als handelsmonopolie voor het gebied ten oosten van Kaap de Goede Hoop en ten westen van de Straat Magellaan. De Compagnie ontwikkelde zich tot 's werelds eerste multinationale onderneming, met soevereine bevoegdheden: oorlog voeren, verdragen sluiten, munt slaan en rechtspreken.</p>
+      <p style="font-size:15px; color:#39414e; line-height:1.65; margin-top:16px;">Dit archief bevat de neerslag van het bestuur van de Compagnie in de Republiek — de <em>Heeren XVII</em>, de centrale vergadering, en de zes <em>kamers</em>: Amsterdam, Zeeland (Middelburg), Delft, Rotterdam, Hoorn en Enkhuizen.</p>
+
+      <h3 style="font-family:'Fraunces',serif; font-size:22px; margin:32px 0 12px;">Hiaten in het archief</h3>
+      <p style="font-size:15px; color:#39414e; line-height:1.65;">Aanzienlijk archiefverlies is gedocumenteerd. Europese correspondentie, financiële stukken van vóór 1700 en materiaal van de Amsterdamse departementen zijn geheel of grotendeels verloren gegaan. Aanvullend materiaal bevindt zich in het <a href="#" class="lnk">Arsip Nasional</a> in Jakarta.</p>
+
+      <h3 style="font-family:'Fraunces',serif; font-size:22px; margin:32px 0 12px;">Hoe te gebruiken</h3>
+      <ol style="font-size:15px; color:#39414e; line-height:1.65; padding-left:20px;">
+        <li>Begin bij de <button class="lnk" data-jump="inventory" style="background:none; border:0; cursor:pointer; font:inherit; padding:0;">inventarislijst</button> en filter op periode of trefwoord.</li>
+        <li>Stukken met status <span class="status-badge online">● Online</span> bekijkt u direct in de viewer.</li>
+        <li>Stukken met status <span class="status-badge offline">● Fysiek</span> kunt u op afspraak inzien via studiezaal-reservering.</li>
+        <li>Bij status <span class="status-badge restr">● Beperkt</span> kunt u digitalisering aanvragen.</li>
+      </ol>
+    </article>
+    <aside>
+      <div style="border:1px solid #e3dfd6; border-radius:10px; background:#f7f6f2; padding:20px;">
+        <p style="font-size:11px; text-transform:uppercase; letter-spacing:.14em; color:#5d6470; margin:0 0 12px;">Kerngegevens</p>
+        <dl class="spec">
+          <div><dt>Toegangsnummer</dt><dd class="num">1.04.02</dd></div>
+          <div><dt>Titel</dt><dd>VOC, 1602–1795 (1811)</dd></div>
+          <div><dt>Vormer</dt><dd>Verenigde Oost-Indische Compagnie</dd></div>
+          <div><dt>Bewaarplaats</dt><dd>Nationaal Archief, Den Haag</dd></div>
+          <div><dt>Omvang</dt><dd>1.279 m¹ · 17.297 inv.nrs</dd></div>
+          <div><dt>Inventarisator</dt><dd>M.A.P. Meilink-Roelofsz e.a. (1992)</dd></div>
+        </dl>
+      </div>
+    </aside>
+  </section>
+
+  <!-- VERANTWOORDING -->
+  <section id="view-info" role="tabpanel" class="hidden" style="max-width:760px;">
+    <h2 style="font-family:'Fraunces',serif; font-size:30px; margin:0 0 16px;">Verantwoording</h2>
+    <p style="font-size:15px; color:#39414e; line-height:1.65;">Deze inventaris is samengesteld door dr. M.A.P. Meilink-Roelofsz, R. Raben en H. Spijkerman onder de titel <em>De archieven van de Verenigde Oost-Indische Compagnie</em> (Den Haag, 1992; bijgewerkt 2017). De beschrijvingen volgen de internationale ISAD(G)-standaard.</p>
+  </section>
+</main>
+
+<!-- TOAST -->
+<div id="toast" class="toast" role="status" aria-live="polite">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toast-msg"></span>
+  <a href="mandje.html">Naar mandje →</a>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div>
+      <a href="home.html" class="brand"><span class="brand-logo display">NA</span><span class="brand-name"><strong>Nationaal Archief</strong></span></a>
+      <p style="color:#5d6470; font-size:13.5px; margin-top:12px; max-width:320px;">Het archief van de Nederlandse rijksoverheid en zijn voorgangers — meer dan 137 km aan documenten.</p>
+    </div>
+    <div><h4>Onderzoek</h4><ul><li><a href="home.html">Zoeken</a></li><li><a href="zoekhulpen.html">Zoekhulpen</a></li><li><a href="#">Open data</a></li></ul></div>
+    <div><h4>Bezoek</h4><ul><li><a href="#">Studiezaal</a></li><li><a href="#">Tentoonstellingen</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div><h4>Bron</h4><ul><li style="font-size:12.5px;color:#5d6470;">Herontwerp/concept.</li><li><a href="https://www.nationaalarchief.nl/onderzoeken/archief/1.04.02" target="_blank" rel="noopener">nationaalarchief.nl</a></li></ul></div>
+  </div>
+  <div class="legal"><div class="legal-row"><span>© Nationaal Archief — herontwerp / concept</span><div style="display:flex; gap:16px;"><a href="#">Toegankelijkheid</a><a href="#">Privacy</a><a href="#">Cookies</a></div></div></div>
+</footer>
+
+<script id="voc-data" type="application/json">
+[
+{"n":1,"section":"octrooien","title":"Octrooi van de Staten-Generaal voor de monopoliehandel ten oosten van Kaap de Goede Hoop en ten westen van de Straat Magellaan, voor 21 jaar.","date":"1602","year":1602,"status":"phys"},
+{"n":2,"section":"octrooien","title":"Verlenging van het octrooi door de Staten-Generaal (21 jaar), met wijzigingen.","date":"1622","year":1622,"status":"digi"},
+{"n":3,"section":"octrooien","title":"Ordonnantie van de Staten-Generaal in aanvulling op de octrooiverlenging van 1622.","date":"1623","year":1623,"status":"digi"},
+{"n":4,"section":"octrooien","title":"Verlenging van het octrooi door de Staten-Generaal (25 jaar).","date":"1647","year":1647,"status":"phys"},
+{"n":5,"section":"octrooien","title":"Verlenging van het octrooi door de Staten-Generaal tot 1700.","date":"1665","year":1665,"status":"phys"},
+{"n":6,"section":"octrooien","title":"Verlenging van het octrooi door de Staten-Generaal (40 jaar) ingaande 1700.","date":"1696","year":1696,"status":"phys"},
+{"n":7,"section":"octrooien","title":"Octrooi 1602 met verlenging van 1696, gedrukt.","date":"1696","year":1696,"status":"digi"},
+{"n":8,"section":"octrooien","title":"Plakkaat van de Staten-Generaal tegen overtredingen van het octrooi, gedrukt.","date":"1622","year":1622,"status":"digi"},
+{"n":9,"section":"octrooien","title":"Octrooiverlenging door de Staten-Generaal (concept, gedrukt).","date":"1740","year":1740,"status":"digi"},
+{"n":10,"section":"octrooien","title":"Extract-resoluties van de Staten van Holland inzake het verzoek tot octrooiverlenging, gedrukt.","date":"1740","year":1740,"status":"digi"},
+{"n":11,"section":"octrooien","title":"Stukken inzake octrooiverlenging, opgesteld door bewindhebbers voor de Staten-Generaal, gedrukt.","date":"1740","year":1740,"status":"digi"},
+{"n":12,"section":"octrooien","title":"Extract-resoluties van de Staten van Holland inzake octrooiverlenging, gedrukt.","date":"1740","year":1740,"status":"digi"},
+{"n":13,"section":"octrooien","title":"Verlenging van het octrooi door de Staten-Generaal (12 jaar).","date":"1740","year":1740,"status":"phys"},
+{"n":14,"section":"octrooien","title":"Octrooi met verlengingen van 1700, 1740, 1742 en 1743, gedrukt.","date":"1743","year":1743,"status":"digi"},
+{"n":15,"section":"octrooien","title":"Octrooi met verlengingen tot en met 1748, gedrukt.","date":"1748","year":1748,"status":"digi"},
+{"n":16,"section":"octrooien","title":"Verlenging van het octrooi door de Staten-Generaal, ingaande 1 januari 1755.","date":"1754","year":1754,"status":"phys"},
+{"n":17,"section":"octrooien","title":"Verlenging van het octrooi door de Staten-Generaal (20 jaar).","date":"1774","year":1774,"status":"phys"},
+{"n":18,"section":"octrooien","title":"Publicatie van de Staten-Generaal over de octrooiverlenging, gedrukt.","date":"1774","year":1774,"status":"digi"},
+{"n":19,"section":"octrooien","title":"Pro memorie — octrooi 1602, verlenging 1622, aanvulling 1623, statuten van Batavia 1642, aantekeningen over munten, maten en gewichten in Indië (afschrift).","date":"17e–18e eeuw","year":1700,"status":"restr"},
+{"n":20,"section":"octrooien","title":"Octrooi van de Staten-Generaal inzake de invoering van het intestaat erfrecht in de vestigingen van de VOC.","date":"17 aug 1661","year":1661,"status":"phys"},
+{"n":21,"section":"octrooien","title":"Octrooi van de Staten-Generaal inzake de aanstelling van curatoren over boedels van overleden VOC-dienaren in Indië.","date":"1665","year":1665,"status":"digi"},
+{"n":22,"section":"octrooien","title":"Octrooi van de Staten van Holland en West-Friesland verbiedend beslag op maandgelden van VOC-dienaren in Indië.","date":"1668","year":1668,"status":"phys"},
+{"n":23,"section":"resoluties","title":"Lijst van octrooien aanwezig in het archief.","date":"19e eeuw","year":1850,"status":"digi"},
+{"n":24,"section":"resoluties","title":"Minuut-resoluties (net) van gewone en buitengewone vergaderingen van de Heeren XVII, met bijlagen.","date":"23 sep 1654 – 23 dec 1662","year":1654,"status":"digi"},
+{"n":25,"section":"resoluties","title":"Minuut-resoluties.","date":"3 apr 1663 – 24 aug 1669","year":1663,"status":"digi"},
+{"n":26,"section":"resoluties","title":"Minuut-resoluties.","date":"11 jan 1670 – 12 mei 1674","year":1670,"status":"digi"},
+{"n":27,"section":"resoluties","title":"Minuut-resoluties.","date":"18 okt 1674 – 15 feb 1676","year":1674,"status":"digi"},
+{"n":28,"section":"resoluties","title":"Minuut-resoluties.","date":"18 okt 1678 – 11 dec 1684","year":1678,"status":"phys"},
+{"n":29,"section":"resoluties","title":"Minuut-resoluties.","date":"26 feb 1685 – 16 nov 1687","year":1685,"status":"digi"},
+{"n":30,"section":"resoluties","title":"Minuut-resoluties.","date":"4 mrt 1688 – 27 jun 1691","year":1688,"status":"digi"},
+{"n":31,"section":"resoluties","title":"Minuut-resoluties.","date":"24 jul 1691 – 11 mrt 1694","year":1691,"status":"digi"},
+{"n":32,"section":"resoluties","title":"Minuut-resoluties.","date":"9 aug 1694 – 27 dec 1697","year":1694,"status":"digi"},
+{"n":33,"section":"resoluties","title":"Minuut-resoluties.","date":"20 mrt 1698 – 16 nov 1701","year":1698,"status":"digi"},
+{"n":34,"section":"resoluties","title":"Minuut-resoluties.","date":"13 feb 1702 – 28 okt 1705","year":1702,"status":"digi"},
+{"n":35,"section":"resoluties","title":"Minuut-resoluties.","date":"2 mrt 1706 – 7 nov 1708","year":1706,"status":"digi"},
+{"n":36,"section":"resoluties","title":"Minuut-resoluties.","date":"28 mrt 1709 – 25 okt 1712","year":1709,"status":"digi"},
+{"n":37,"section":"resoluties","title":"Minuut-resoluties.","date":"4 mrt 1713 – 28 sep 1717","year":1713,"status":"digi"},
+{"n":38,"section":"resoluties","title":"Minuut-resoluties.","date":"9 mrt 1716 – 28 sep 1719","year":1716,"status":"digi"},
+{"n":39,"section":"resoluties","title":"Minuut-resoluties.","date":"26 feb 1720 – 7 okt 1722","year":1720,"status":"digi"},
+{"n":40,"section":"resoluties","title":"Minuut-resoluties.","date":"22 feb 1723 – 28 sep 1725","year":1723,"status":"digi"},
+{"n":41,"section":"resoluties","title":"Minuut-resoluties.","date":"25 feb 1726 – 20 mei 1728","year":1726,"status":"digi"},
+{"n":42,"section":"resoluties","title":"Minuut-resoluties.","date":"27 jul 1728 – 24 feb 1730","year":1728,"status":"digi"},
+{"n":43,"section":"resoluties","title":"Minuut-resoluties.","date":"7 aug 1730 – 22 nov 1731","year":1730,"status":"digi"},
+{"n":44,"section":"resoluties","title":"Minuut-resoluties.","date":"25 feb 1732 – 20 nov 1734","year":1732,"status":"digi"},
+{"n":45,"section":"resoluties","title":"Minuut-resoluties.","date":"28 feb 1735 – 13 nov 1737","year":1735,"status":"digi"},
+{"n":46,"section":"resoluties","title":"Minuut-resoluties.","date":"24 feb 1738 – 2 dec 1740","year":1738,"status":"digi"},
+{"n":47,"section":"resoluties","title":"Minuut-resoluties.","date":"27 feb 1741 – 17 nov 1742","year":1741,"status":"digi"},
+{"n":48,"section":"resoluties","title":"Minuut-resoluties.","date":"25 feb 1743 – 17 nov 1744","year":1743,"status":"digi"},
+{"n":49,"section":"resoluties","title":"Minuut-resoluties.","date":"15 mrt 1745 – 4 nov 1746","year":1745,"status":"digi"},
+{"n":50,"section":"resoluties","title":"Minuut-resoluties.","date":"6 mrt 1747 – 14 dec 1748","year":1747,"status":"digi"},
+{"n":51,"section":"resoluties","title":"Minuut-resoluties.","date":"10 feb 1749 – 21 nov 1750","year":1749,"status":"digi"},
+{"n":52,"section":"resoluties","title":"Minuut-resoluties.","date":"15 mrt 1751 – 6 okt 1752","year":1751,"status":"digi"},
+{"n":53,"section":"resoluties","title":"Minuut-resoluties.","date":"19 mrt 1753 – 12 apr 1755","year":1753,"status":"digi"},
+{"n":54,"section":"resoluties","title":"Minuut-resoluties.","date":"6 okt 1755 – 15 okt 1756","year":1755,"status":"phys"},
+{"n":55,"section":"resoluties","title":"Minuut-resoluties.","date":"14 mrt 1757 – 20 okt 1758","year":1757,"status":"digi"},
+{"n":56,"section":"resoluties","title":"Minuut-resoluties.","date":"12 mrt 1759 – 15 okt 1760","year":1759,"status":"digi"},
+{"n":57,"section":"resoluties","title":"Minuut-resoluties.","date":"30 mrt 1761 – 11 nov 1762","year":1761,"status":"digi"},
+{"n":58,"section":"resoluties","title":"Minuut-resoluties.","date":"14 mrt 1763 – 9 apr 1764","year":1763,"status":"digi"},
+{"n":59,"section":"resoluties","title":"Minuut-resoluties.","date":"8 okt 1764 – 5 apr 1765","year":1764,"status":"digi"},
+{"n":60,"section":"resoluties","title":"Minuut-resoluties.","date":"30 sep 1765 – 29 mrt 1766","year":1765,"status":"digi"},
+{"n":61,"section":"resoluties","title":"Minuut-resoluties.","date":"29 sep 1766 – 14 okt 1767","year":1766,"status":"digi"},
+{"n":62,"section":"resoluties","title":"Minuut-resoluties.","date":"21 mrt 1768 – 25 okt 1769","year":1768,"status":"digi"},
+{"n":63,"section":"resoluties","title":"Minuut-resoluties.","date":"19 mrt – 15 okt 1770","year":1770,"status":"digi"},
+{"n":64,"section":"resoluties","title":"Minuut-resoluties.","date":"25 mrt – 18 okt 1771","year":1771,"status":"digi"},
+{"n":65,"section":"resoluties","title":"Minuut-resoluties.","date":"7 apr – 14 okt 1772","year":1772,"status":"digi"},
+{"n":66,"section":"resoluties","title":"Minuut-resoluties.","date":"29 mrt – 20 okt 1773","year":1773,"status":"digi"},
+{"n":67,"section":"resoluties","title":"Minuut-resoluties.","date":"28 mrt – 20 okt 1774","year":1774,"status":"digi"},
+{"n":68,"section":"resoluties","title":"Minuut-resoluties.","date":"27 mrt – 10 okt 1775","year":1775,"status":"digi"},
+{"n":69,"section":"resoluties","title":"Minuut-resoluties.","date":"18 mrt – 12 nov 1776","year":1776,"status":"digi"},
+{"n":70,"section":"resoluties","title":"Minuut-resoluties.","date":"24 mrt – 17 okt 1777","year":1777,"status":"digi"},
+{"n":71,"section":"resoluties","title":"Minuut-resoluties.","date":"23 mrt – 9 okt 1778","year":1778,"status":"digi"},
+{"n":72,"section":"resoluties","title":"Minuut-resoluties.","date":"7 apr – 23 okt 1779","year":1779,"status":"digi"},
+{"n":73,"section":"resoluties","title":"Minuut-resoluties.","date":"3 apr – 10 nov 1780","year":1780,"status":"digi"},
+{"n":74,"section":"resoluties","title":"Minuut-resoluties.","date":"12 feb – 8 dec 1781","year":1781,"status":"digi"},
+{"n":75,"section":"resoluties","title":"Minuut-resoluties.","date":"12 feb – 7 dec 1782","year":1782,"status":"digi"},
+{"n":76,"section":"resoluties","title":"Minuut-resoluties.","date":"11 feb – 5 dec 1783","year":1783,"status":"digi"},
+{"n":77,"section":"resoluties","title":"Minuut-resoluties.","date":"19 apr – 27 nov 1784","year":1784,"status":"digi"},
+{"n":78,"section":"resoluties","title":"Minuut-resoluties.","date":"14 apr – 23 nov 1785","year":1785,"status":"digi"},
+{"n":79,"section":"resoluties","title":"Minuut-resoluties.","date":"3 – 29 apr 1786","year":1786,"status":"digi"},
+{"n":80,"section":"resoluties","title":"Minuut-resoluties.","date":"6 nov – 28 dec 1786","year":1786,"status":"digi"},
+{"n":81,"section":"resoluties","title":"Minuut-resoluties.","date":"14 mei – 12 jul 1787","year":1787,"status":"digi"},
+{"n":82,"section":"resoluties","title":"Minuut-resoluties.","date":"3 dec 1787 – 8 jan 1788","year":1787,"status":"digi"},
+{"n":83,"section":"resoluties","title":"Minuut-resoluties.","date":"6 mrt – 16 mei 1788","year":1788,"status":"digi"},
+{"n":84,"section":"resoluties","title":"Minuut-resoluties.","date":"24 nov 1788 – 2 jan 1789","year":1788,"status":"digi"},
+{"n":85,"section":"resoluties","title":"Minuut-resoluties.","date":"6 – 29 apr 1789","year":1789,"status":"digi"},
+{"n":86,"section":"resoluties","title":"Minuut-resoluties.","date":"26 okt – 3 dec 1789","year":1789,"status":"digi"},
+{"n":87,"section":"resoluties","title":"Minuut-resoluties.","date":"19 apr – 2 okt 1790","year":1790,"status":"digi"},
+{"n":88,"section":"resoluties","title":"Minuut-resoluties.","date":"29 nov 1790 – 31 mrt 1791","year":1790,"status":"digi"},
+{"n":89,"section":"resoluties","title":"Minuut-resoluties.","date":"18 apr – 19 aug 1791","year":1791,"status":"digi"},
+{"n":90,"section":"resoluties","title":"Minuut-resoluties.","date":"14 nov – 22 dec 1791","year":1791,"status":"digi"},
+{"n":91,"section":"resoluties","title":"Minuut-resoluties.","date":"16 apr – 18 mei 1792","year":1792,"status":"digi"},
+{"n":92,"section":"resoluties","title":"Minuut-resoluties.","date":"12 nov – 14 dec 1792","year":1792,"status":"digi"},
+{"n":93,"section":"resoluties","title":"Minuut-resoluties.","date":"27 feb – 10 jun 1793","year":1793,"status":"digi"},
+{"n":94,"section":"resoluties","title":"Minuut-resoluties.","date":"18 nov 1793 – 11 jan 1794","year":1793,"status":"digi"},
+{"n":95,"section":"resoluties","title":"Minuut-resoluties.","date":"31 mrt – 22 dec 1794","year":1794,"status":"digi"},
+{"n":96,"section":"resoluties","title":"Minuut-resoluties.","date":"26 mei – 28 jun 1794","year":1794,"status":"digi"}
+]
+</script>
+
+<script>
+(function(){
+  const data = JSON.parse(document.getElementById('voc-data').textContent);
+  const rowsEl = document.getElementById('rows');
+  const search = document.getElementById('search');
+  const resultC = document.getElementById('result-count');
+  const announce = document.getElementById('result-announce');
+  const chipsEl = document.getElementById('chips');
+  const resetBtn = document.getElementById('reset-filters');
+
+  const STATUS = {
+    digi:  { label:'Online',  full:'Online beschikbaar',          dot:'#16a34a', cls:'status-online' },
+    phys:  { label:'Fysiek',  full:'Alleen fysiek raadpleegbaar', dot:'#d97706', cls:'status-offline' },
+    restr: { label:'Beperkt', full:'Beperkt raadpleegbaar',       dot:'#dc2626', cls:'status-restr' },
+  };
+
+  const counts = { digi:0, phys:0, restr:0 };
+  data.forEach(d => counts[d.status]++);
+  document.getElementById('cnt-digi').textContent = counts.digi;
+  document.getElementById('cnt-phys').textContent = counts.phys;
+  document.getElementById('cnt-restr').textContent = counts.restr;
+
+  let state = { q:'', sort:'nr', statuses:new Set(), yearMin:1602, yearMax:1795 };
+
+  function pass(d){
+    if (state.statuses.size && !state.statuses.has(d.status)) return false;
+    if (d.year < state.yearMin || d.year > state.yearMax) return false;
+    if (state.q){
+      const q = state.q.toLowerCase();
+      if (!(d.n + ' ' + d.title + ' ' + d.date).toLowerCase().includes(q)) return false;
+    }
+    return true;
+  }
+
+  function sortRows(rows){
+    const c = state.sort==='year' ? (a,b)=>a.year-b.year || a.n-b.n : (a,b)=>a.n-b.n;
+    return rows.slice().sort(c);
+  }
+
+  function render(){
+    const rows = sortRows(data.filter(pass));
+
+    let html = '';
+    let curSection = null;
+    const SECTION = {
+      octrooien:  { lbl: 'Octrooien', rng:'1–22', desc:'Charters en privileges van de Staten-Generaal voor de VOC.' },
+      resoluties: { lbl: 'Resoluties Heeren XVII', rng:'23–96', desc:'Net-versies van vergaderingsbesluiten van de bewindhebbers, 1654–1794.' },
+    };
+
+    rows.forEach(d => {
+      if (d.section !== curSection){
+        curSection = d.section;
+        const s = SECTION[curSection];
+        const cnt = data.filter(x => x.section===curSection).length;
+        html += `<div class="section-head">
+          <div class="crumb">
+            <a href="#">Deel I — Compagniesarchieven</a>
+            <span class="sep">›</span>
+            <a href="#">A. Heeren XVII en kamer Amsterdam</a>
+            <span class="sep">›</span>
+            <span>${s.lbl} (${s.rng})</span>
+          </div>
+          <div class="head-row">
+            <h3>${s.lbl} <span class="num" style="color:#5d6470; font-weight:500;">${s.rng}</span></h3>
+            <span class="meta num">${cnt} stukken</span>
+          </div>
+          <p style="font-size:13.5px; color:#5d6470; margin:6px 0 0;">${s.desc}</p>
+        </div>`;
+      }
+      const st = STATUS[d.status];
+      html += `
+        <a class="grid-row row" role="option" data-n="${d.n}" id="row-${d.n}" href="detail.html?n=${d.n}" style="text-decoration:none; color:inherit;">
+          <span class="num" style="font-size:13px; color:#5d6470;">${d.n}</span>
+          <span class="row-title" style="font-size:14.5px; color:#0e1b2c; line-height:1.4;">${d.title}</span>
+          <span class="num" style="font-size:13px; color:#5d6470;">${d.date}</span>
+          <span style="text-align:right; font-size:13px; font-weight:600;" class="${st.cls}">
+            <span class="dot" style="background:${st.dot}; vertical-align:middle; margin-right:6px;"></span>${st.label}
+          </span>
+        </a>`;
+    });
+
+    // Footer of list — link to next section in archive
+    html += `<div class="section-foot">
+      <span style="color:#5d6470;">Einde van Deel I · A — 96 stukken in deze sectie.</span>
+      <a href="#"><span>Volgende sectie: B. Kamer Zeeland (4.470–7.443)</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>`;
+
+    rowsEl.innerHTML = html || `<p style="padding:40px; text-align:center; color:#5d6470;">Geen resultaten — pas filters of zoekterm aan.</p>`;
+    resultC.textContent = `${rows.length} van ${data.length} stukken (Deel I · A)`;
+    announce.textContent = `${rows.length} resultaten`;
+
+    renderChips();
+  }
+
+  function renderChips(){
+    const items = [];
+    state.statuses.forEach(s => items.push([STATUS[s].full, ()=>{
+      state.statuses.delete(s);
+      const cb = document.querySelector(`[data-status="${s}"]`); if(cb) cb.checked=false;
+    }]));
+    if (state.yearMin > 1602 || state.yearMax < 1795) items.push([`${state.yearMin} – ${state.yearMax}`, ()=>{
+      state.yearMin=1602; state.yearMax=1795;
+      document.getElementById('yr-from').value=1602; document.getElementById('yr-to').value=1795;
+      document.getElementById('period-label').textContent='Periode';
+    }]);
+    if (state.q) items.push([`Zoekterm: "${state.q}"`, ()=>{ state.q=''; search.value=''; }]);
+
+    chipsEl.innerHTML = items.map((c,i)=>`<span class="filter-pill"><span>${c[0]}</span><button data-i="${i}" type="button" aria-label="Verwijder ${c[0]}">×</button></span>`).join('');
+    chipsEl.querySelectorAll('button').forEach(b => b.addEventListener('click', ()=>{ items[+b.dataset.i][1](); render(); }));
+    resetBtn.hidden = items.length === 0;
+  }
+
+  document.querySelectorAll('[data-status]').forEach(cb => {
+    cb.addEventListener('change', ()=>{
+      if (cb.checked) state.statuses.add(cb.dataset.status); else state.statuses.delete(cb.dataset.status);
+      render();
+    });
+  });
+  resetBtn.addEventListener('click', ()=>{
+    state = { ...state, q:'', statuses:new Set(), yearMin:1602, yearMax:1795 };
+    document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);
+    document.getElementById('yr-from').value=1602; document.getElementById('yr-to').value=1795;
+    document.getElementById('period-label').textContent='Periode';
+    search.value=''; render();
+  });
+  document.getElementById('yr-apply').addEventListener('click', ()=>{
+    const f = +document.getElementById('yr-from').value || 1602;
+    const t = +document.getElementById('yr-to').value || 1795;
+    state.yearMin = Math.max(1602, Math.min(f,t));
+    state.yearMax = Math.min(1795, Math.max(f,t));
+    document.getElementById('period-label').textContent = `Periode: ${state.yearMin}–${state.yearMax}`;
+    document.getElementById('yr-apply').closest('details').open = false;
+    render();
+  });
+  search.addEventListener('input', e => { state.q = e.target.value; render(); });
+  document.getElementById('sort').addEventListener('change', e => { state.sort = e.target.value; render(); });
+
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected','false'));
+      t.setAttribute('aria-selected','true');
+      const v = t.dataset.view;
+      ['overview','inventory','info'].forEach(k=>{
+        document.getElementById('view-'+k).classList.toggle('hidden', k!==v);
+      });
+    });
+  });
+  document.querySelectorAll('[data-jump]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      document.querySelector(`.tab[data-view="${b.dataset.jump}"]`).click();
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+
+  document.addEventListener('keydown', e=>{
+    if (e.target.matches('input,textarea,select')) return;
+    if (e.key==='/') { e.preventDefault(); search.focus(); }
+  });
+
+  // Sync basket badge
+  const basket = JSON.parse(localStorage.getItem('voc-basket') || '[]');
+  document.getElementById('basket-badge').textContent = basket.length;
+
+  render();
+})();
+</script>
+</body>
+</html>

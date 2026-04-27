@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mijn mandje — Studiezaal reserveren — Nationaal Archief</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .page-hero { padding: 32px 0 24px; border-bottom: 1px solid #e3dfd6; background: #f7f6f2; margin-bottom: 32px; }
+  .page-hero h1 { font-family: 'Fraunces', serif; font-size: 36px; margin: 0 0 8px; }
+  .page-hero p { font-size: 15px; color: #5d6470; margin: 0; max-width: 600px; }
+
+  .steps { display: flex; gap: 12px; margin: 0 auto 32px; max-width: 800px; }
+  .step { flex: 1; padding: 14px 16px; border: 1px solid #e3dfd6; border-radius: 8px; font-size: 13.5px; background: #fff; display: flex; align-items: center; gap: 12px; }
+  .step .num { width: 28px; height: 28px; border-radius: 50%; background: #e3dfd6; color: #5d6470; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0; }
+  .step .lbl { line-height: 1.2; }
+  .step .lbl small { display: block; color: #5d6470; font-size: 11.5px; margin-top: 2px; }
+  .step.active { border-color: #154273; background: #eef3fa; }
+  .step.active .num { background: #154273; color: #fff; }
+  .step.done .num { background: #16a34a; color: #fff; }
+  .step.done .num::after { content: "✓"; }
+  .step.done .num span { display: none; }
+
+  .layout { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; }
+
+  .basket-card { border: 1px solid #e3dfd6; border-radius: 12px; background: #fff; overflow: hidden; }
+  .basket-head { padding: 16px 20px; border-bottom: 1px solid #e3dfd6; background: #f7f6f2; display: flex; justify-content: space-between; align-items: center; }
+  .basket-head h2 { font-family: 'Fraunces', serif; font-size: 19px; margin: 0; }
+  .basket-empty { padding: 60px 24px; text-align: center; color: #5d6470; }
+  .basket-empty svg { color: #cfc9bc; margin-bottom: 12px; }
+  .basket-empty h2 { font-family: 'Fraunces', serif; font-size: 22px; color: #0e1b2c; margin: 0 0 8px; }
+
+  .basket-item { display: grid; grid-template-columns: 60px 1fr auto auto; gap: 16px; padding: 16px 20px; border-bottom: 1px solid #efece5; align-items: center; }
+  .basket-item:last-child { border-bottom: 0; }
+  .basket-item .num { font-family: ui-monospace, monospace; font-size: 13px; color: #5d6470; }
+  .basket-item .info h3 { font-family: 'Fraunces', serif; font-size: 16px; margin: 0 0 4px; line-height: 1.3; }
+  .basket-item .info h3 a { color: #0e1b2c; text-decoration: none; }
+  .basket-item .info h3 a:hover { color: #0f3360; }
+  .basket-item .info p { font-size: 12.5px; color: #5d6470; margin: 0; }
+  .basket-item .remove { background: none; border: 0; color: #5d6470; cursor: pointer; padding: 8px; border-radius: 6px; }
+  .basket-item .remove:hover { background: #fee2e2; color: #b91c1c; }
+
+  .step-card { border: 1px solid #e3dfd6; border-radius: 12px; background: #fff; padding: 24px; margin-top: 24px; }
+  .step-card h2 { font-family: 'Fraunces', serif; font-size: 22px; margin: 0 0 6px; }
+  .step-card .desc { font-size: 14px; color: #5d6470; margin: 0 0 20px; }
+
+  .field { margin-bottom: 16px; }
+  .field > label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #0e1b2c; }
+  .field input, .field select { width: 100%; padding: 10px 12px; border: 1px solid #cfc9bc; border-radius: 6px; font-size: 14.5px; font-family: inherit; }
+  .field input:focus, .field select:focus { outline: 2px solid #154273; border-color: #154273; }
+  .field .hint { font-size: 12px; color: #5d6470; margin-top: 6px; }
+
+  .timeslots { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .timeslot { padding: 12px; border: 1px solid #cfc9bc; border-radius: 8px; background: #fff; cursor: pointer; text-align: center; }
+  .timeslot strong { display: block; font-size: 14px; font-variant-numeric: tabular-nums; }
+  .timeslot small { display: block; color: #5d6470; font-size: 12px; margin-top: 2px; }
+  .timeslot:hover { border-color: #154273; }
+  .timeslot[aria-pressed="true"] { background: #0f3360; color: #fff; border-color: #0f3360; }
+  .timeslot[aria-pressed="true"] small { color: #b3c7e2; }
+  .timeslot[disabled] { opacity: .4; cursor: not-allowed; }
+
+  .summary-card { position: sticky; top: 80px; align-self: start; border: 1px solid #e3dfd6; border-radius: 12px; background: #f7f6f2; padding: 20px; }
+  .summary-card h3 { font-family: 'Fraunces', serif; font-size: 18px; margin: 0 0 14px; }
+  .summary-card dl { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; font-size: 13.5px; }
+  .summary-card dt { color: #5d6470; }
+  .summary-card dd { color: #0e1b2c; margin: 0; text-align: right; }
+
+  .login-banner { background: #eef3fa; border: 1px solid #dbe5f2; border-radius: 8px; padding: 16px; display: flex; gap: 14px; align-items: flex-start; margin-bottom: 16px; }
+  .login-banner .icon { width: 36px; height: 36px; border-radius: 8px; background: #154273; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .login-banner h3 { font-size: 14.5px; margin: 0 0 4px; color: #0f3360; }
+  .login-banner p { font-size: 13px; color: #39414e; margin: 0; line-height: 1.5; }
+
+  .confirmation { text-align: center; padding: 60px 20px; }
+  .confirmation .check { width: 64px; height: 64px; border-radius: 50%; background: #dcfce7; color: #15803d; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+  .confirmation h2 { font-family: 'Fraunces', serif; font-size: 32px; margin: 0 0 12px; }
+  .confirmation p { font-size: 15px; color: #39414e; line-height: 1.6; max-width: 500px; margin: 0 auto 20px; }
+  .confirmation .ref { display: inline-block; background: #f7f6f2; padding: 12px 20px; border-radius: 8px; font-family: ui-monospace, monospace; font-size: 14px; margin: 16px 0 24px; }
+
+  @media (max-width: 1024px) {
+    .layout { grid-template-columns: 1fr; }
+    .summary-card { position: static; }
+    .steps { flex-wrap: wrap; }
+    .step { flex: 1 1 calc(50% - 6px); }
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<a href="#main" class="skip">Direct naar inhoud</a>
+
+<div class="top-strip">
+  <div class="container" style="max-width:1440px;">
+    <span>Een onderdeel van het Ministerie van Onderwijs, Cultuur en Wetenschap</span>
+    <div style="display:flex; gap:20px;"><a href="#">Studiezaal reserveren</a><a href="#">Open data</a><a href="#" hreflang="en" lang="en">English</a></div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container" style="max-width:1440px;">
+    <a href="home.html" class="brand">
+      <span class="brand-logo display">NA</span>
+      <span class="brand-name"><strong>Nationaal Archief</strong><small>Het geheugen van Nederland</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Hoofdmenu">
+      <a href="home.html" class="active">Onderzoeken</a>
+      <a href="zoekhulpen.html">Zoekhulpen</a>
+      <a href="#">Beleven</a>
+      <a href="#">Archiveren</a>
+    </nav>
+    <form class="global-search" role="search" action="zoeken.html" method="get">
+      <label for="gq" class="sr-only">Zoek</label>
+      <div class="global-search-form">
+        <input id="gq" name="q" type="search" placeholder="Zoek archieven, personen, scans…"/>
+        <button type="submit" aria-label="Zoeken"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      </div>
+    </form>
+    <a href="mandje.html" class="basket-btn" style="border-color:#0f3360; color:#0f3360;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Mandje <span class="badge" id="basket-badge">0</span>
+    </a>
+    <a href="#" class="icon-btn" aria-label="Mijn account"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <nav style="font-size:12px; color:#5d6470; margin-bottom:8px;" aria-label="Kruimelpad">
+      <ol style="display:flex; gap:8px; padding:0; margin:0; list-style:none;">
+        <li><a href="home.html" style="color:inherit;">Home</a></li>
+        <li style="color:#b3c7e2;">/</li>
+        <li><span style="color:#0e1b2c;">Mijn mandje</span></li>
+      </ol>
+    </nav>
+    <h1>Mijn mandje</h1>
+    <p>Reserveer een bezoek aan de studiezaal om de gekozen stukken in te zien.</p>
+  </div>
+</section>
+
+<main id="main" class="container">
+
+  <!-- STEPS -->
+  <ol class="steps" id="steps">
+    <li class="step active" data-step="1"><span class="num"><span>1</span></span><span class="lbl">Mandje<small>Stukken kiezen</small></span></li>
+    <li class="step" data-step="2"><span class="num"><span>2</span></span><span class="lbl">Datum & tijd<small>Studiezaal kiezen</small></span></li>
+    <li class="step" data-step="3"><span class="num"><span>3</span></span><span class="lbl">Inloggen<small>NA-account</small></span></li>
+    <li class="step" data-step="4"><span class="num"><span>4</span></span><span class="lbl">Bevestigen<small>Reservering plaatsen</small></span></li>
+  </ol>
+
+  <div class="layout">
+    <!-- LEFT: Step content -->
+    <div id="content"></div>
+
+    <!-- RIGHT: Summary -->
+    <aside>
+      <div class="summary-card">
+        <h3>Samenvatting</h3>
+        <dl>
+          <dt>Stukken in mandje</dt><dd id="sum-count">0</dd>
+          <dt>Studiezaal</dt><dd id="sum-room">—</dd>
+          <dt>Datum</dt><dd id="sum-date">—</dd>
+          <dt>Tijdslot</dt><dd id="sum-time">—</dd>
+          <dt>Kosten</dt><dd>Gratis</dd>
+        </dl>
+        <hr style="border:0; border-top:1px solid #e3dfd6; margin:14px 0;"/>
+        <p style="font-size:12px; color:#5d6470; line-height:1.5; margin:0;">Reserveren kost niets. Een NA-account of DigiD is vereist voor bevestiging. U ontvangt een bevestigingsmail.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container" style="max-width:1440px;">
+    <div>
+      <a href="home.html" class="brand"><span class="brand-logo display">NA</span><span class="brand-name"><strong>Nationaal Archief</strong></span></a>
+      <p style="color:#5d6470; font-size:13.5px; margin-top:12px; max-width:320px;">Het archief van de Nederlandse rijksoverheid en zijn voorgangers.</p>
+    </div>
+    <div><h4>Onderzoek</h4><ul><li><a href="home.html">Zoeken</a></li><li><a href="zoekhulpen.html">Zoekhulpen</a></li></ul></div>
+    <div><h4>Bezoek</h4><ul><li><a href="#">Studiezaal</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div><h4>Bron</h4><ul><li style="font-size:12.5px;color:#5d6470;">Concept.</li></ul></div>
+  </div>
+  <div class="legal"><div class="legal-row"><span>© Nationaal Archief — concept</span></div></div>
+</footer>
+
+<script id="voc-titles" type="application/json">
+{
+  "1":{"title":"Octrooi van de Staten-Generaal voor de monopoliehandel ten oosten van Kaap de Goede Hoop","date":"1602","status":"phys"},
+  "2":{"title":"Verlenging van het octrooi door de Staten-Generaal (21 jaar)","date":"1622","status":"digi"},
+  "4":{"title":"Verlenging van het octrooi door de Staten-Generaal (25 jaar)","date":"1647","status":"phys"},
+  "13":{"title":"Verlenging van het octrooi door de Staten-Generaal (12 jaar)","date":"1740","status":"phys"},
+  "16":{"title":"Verlenging van het octrooi door de Staten-Generaal","date":"1754","status":"phys"},
+  "17":{"title":"Verlenging van het octrooi door de Staten-Generaal (20 jaar)","date":"1774","status":"phys"},
+  "19":{"title":"Pro memorie — octrooi 1602, statuten van Batavia 1642…","date":"17e–18e eeuw","status":"restr"},
+  "20":{"title":"Octrooi van de Staten-Generaal inzake het intestaat erfrecht in de vestigingen van de VOC","date":"17 aug 1661","status":"phys"},
+  "22":{"title":"Octrooi inzake beslag op maandgelden van VOC-dienaren","date":"1668","status":"phys"},
+  "28":{"title":"Minuut-resoluties Heeren XVII","date":"18 okt 1678 – 11 dec 1684","status":"phys"},
+  "54":{"title":"Minuut-resoluties Heeren XVII","date":"6 okt 1755 – 15 okt 1756","status":"phys"}
+}
+</script>
+
+<script>
+(function(){
+  const titlesMap = JSON.parse(document.getElementById('voc-titles').textContent);
+  function getInfo(n){
+    if (titlesMap[n]) return titlesMap[n];
+    return { title: n <= 22 ? `Octrooi nr. ${n}` : `Minuut-resoluties (inv.nr ${n})`, date: n <= 22 ? '17e eeuw' : '18e eeuw', status: n <= 22 ? 'phys' : 'digi' };
+  }
+
+  let basket = JSON.parse(localStorage.getItem('voc-basket') || '[]');
+  // Seed met voorbeelddata als leeg, voor demo
+  if (!basket.length) basket = [20, 4, 22];
+
+  let state = { step: 1, room: 'Hoofdstudiezaal — Den Haag', date: '', timeslot: '', refnr: '' };
+
+  const STATUS_LBL = {
+    digi: { txt: 'Online — bezoek niet nodig', dot: '#16a34a' },
+    phys: { txt: 'Fysiek — studiezaal nodig',  dot: '#d97706' },
+    restr:{ txt: 'Beperkt — bijzondere collecties', dot: '#dc2626' }
+  };
+
+  function persist(){ localStorage.setItem('voc-basket', JSON.stringify(basket)); }
+
+  function syncBadges(){
+    document.getElementById('basket-badge').textContent = basket.length;
+    document.getElementById('sum-count').textContent = basket.length;
+    document.getElementById('sum-room').textContent = state.room.split(' — ')[0] || '—';
+    document.getElementById('sum-date').textContent = state.date ? formatDate(state.date) : '—';
+    document.getElementById('sum-time').textContent = state.timeslot || '—';
+  }
+  function formatDate(iso){
+    const d = new Date(iso); if (isNaN(d)) return iso;
+    return d.toLocaleDateString('nl-NL', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  }
+
+  function renderSteps(){
+    document.querySelectorAll('.step').forEach(s => {
+      const n = +s.dataset.step;
+      s.classList.toggle('active', n === state.step);
+      s.classList.toggle('done', n < state.step);
+    });
+  }
+
+  function render(){
+    syncBadges(); renderSteps();
+    const c = document.getElementById('content');
+    if (state.step === 1) c.innerHTML = renderStep1();
+    if (state.step === 2) c.innerHTML = renderStep2();
+    if (state.step === 3) c.innerHTML = renderStep3();
+    if (state.step === 4) c.innerHTML = renderStep4();
+    wireUp();
+  }
+
+  function renderStep1(){
+    if (!basket.length) return `
+      <div class="basket-card">
+        <div class="basket-empty">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <h2>Uw mandje is leeg</h2>
+          <p style="margin:0 0 20px;">Voeg stukken toe vanuit de inventaris om een studiezaal-bezoek te reserveren.</p>
+          <a href="index.html" class="btn-primary">Naar inventaris VOC</a>
+        </div>
+      </div>`;
+
+    const items = basket.map(n => {
+      const info = getInfo(n);
+      const s = STATUS_LBL[info.status];
+      return `
+        <div class="basket-item">
+          <span class="num">inv. ${n}</span>
+          <div class="info">
+            <h3><a href="detail.html?n=${n}">${info.title}</a></h3>
+            <p>${info.date} · <span style="color:${s.dot}; font-weight:600;">● ${s.txt}</span></p>
+          </div>
+          <span style="font-size:12px; color:#5d6470;">1.04.02</span>
+          <button class="remove" data-remove="${n}" aria-label="Verwijder inv.nr ${n} uit mandje" title="Verwijder">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></svg>
+          </button>
+        </div>`;
+    }).join('');
+
+    const physCount = basket.filter(n => getInfo(n).status !== 'digi').length;
+    const onlineCount = basket.filter(n => getInfo(n).status === 'digi').length;
+
+    return `
+      <div class="basket-card">
+        <div class="basket-head">
+          <h2>${basket.length} stukken in mandje</h2>
+          <a href="index.html" style="font-size:13px; color:#0f3360;">+ Meer stukken toevoegen</a>
+        </div>
+        ${items}
+      </div>
+
+      ${onlineCount > 0 ? `<div class="login-banner" style="margin-top:16px;">
+        <span class="icon" style="background:#16a34a;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></span>
+        <div><h3 style="color:#15803d;">${onlineCount} stuk(ken) zijn online beschikbaar</h3><p>U hoeft hiervoor niet naar de studiezaal — bekijk ze direct in de viewer.</p></div>
+      </div>` : ''}
+
+      <div style="margin-top:24px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
+        <a href="index.html" style="color:#5d6470; font-size:14px; display:inline-flex; align-items:center; gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Verder zoeken
+        </a>
+        ${physCount > 0 ? `<button type="button" class="btn-primary btn-large" data-next>
+          Reserveer studiezaal voor ${physCount} stuk(ken) →
+        </button>` : `<p style="font-size:13px; color:#5d6470;">Geen studiezaal-bezoek nodig — alle stukken zijn online beschikbaar.</p>`}
+      </div>
+    `;
+  }
+
+  function renderStep2(){
+    return `
+      <div class="step-card">
+        <h2>Kies datum en tijdslot</h2>
+        <p class="desc">De studiezaal is open <strong>dinsdag t/m vrijdag, 09:30–17:00</strong>. Originele charters worden alleen voorgelegd in de Bijzondere Collecties studiezaal.</p>
+
+        <div class="field">
+          <label for="r-room">Studiezaal</label>
+          <select id="r-room">
+            <option value="Hoofdstudiezaal — Den Haag">Hoofdstudiezaal — Den Haag</option>
+            <option value="Bijzondere Collecties">Bijzondere Collecties (alleen op afspraak)</option>
+          </select>
+          <p class="hint">Voor uw selectie raden we de Bijzondere Collecties aan i.v.m. fragiele charters.</p>
+        </div>
+
+        <div class="field">
+          <label for="r-date">Datum bezoek</label>
+          <input id="r-date" type="date" min="2026-04-29" value="${state.date}"/>
+          <p class="hint">Studiezaal is open di–vr.</p>
+        </div>
+
+        <div class="field">
+          <label>Tijdslot</label>
+          <div class="timeslots" role="radiogroup">
+            <button type="button" class="timeslot" data-time="09:30 – 12:30" aria-pressed="${state.timeslot==='09:30 – 12:30'}"><strong>09:30 – 12:30</strong><small>ochtend</small></button>
+            <button type="button" class="timeslot" data-time="13:00 – 17:00" aria-pressed="${state.timeslot==='13:00 – 17:00'}"><strong>13:00 – 17:00</strong><small>middag</small></button>
+            <button type="button" class="timeslot" data-time="09:30 – 17:00" aria-pressed="${state.timeslot==='09:30 – 17:00'}"><strong>09:30 – 17:00</strong><small>hele dag</small></button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px; display:flex; justify-content:space-between;">
+        <button type="button" class="btn-secondary" data-back>← Terug naar mandje</button>
+        <button type="button" class="btn-primary btn-large" data-next id="step2-next" disabled>Volgende: inloggen →</button>
+      </div>
+    `;
+  }
+
+  function renderStep3(){
+    return `
+      <div class="step-card">
+        <h2>Log in om te bevestigen</h2>
+        <p class="desc">Reserveren is gratis, maar u heeft een Nationaal Archief-account of DigiD nodig om de bevestiging af te ronden.</p>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-top:20px;">
+          <button type="button" class="btn-primary btn-large" style="height:64px; flex-direction:column; gap:2px;" data-login>
+            <span style="font-weight:600;">Inloggen met DigiD</span>
+            <small style="font-size:11px; opacity:.85; font-weight:400;">Voor Nederlandse burgers</small>
+          </button>
+          <button type="button" class="btn-secondary btn-large" style="height:64px; flex-direction:column; gap:2px;" data-login>
+            <span style="font-weight:600;">Inloggen met NA-account</span>
+            <small style="font-size:11px; color:#5d6470; font-weight:400;">Voor onderzoekers wereldwijd</small>
+          </button>
+        </div>
+
+        <p style="margin-top:20px; font-size:13px; color:#5d6470;">Geen account? <a href="#" style="color:#0f3360;">Maak gratis een NA-account</a> (1 minuut).</p>
+      </div>
+
+      <div style="margin-top:20px; display:flex; justify-content:space-between;">
+        <button type="button" class="btn-secondary" data-back>← Terug</button>
+      </div>
+    `;
+  }
+
+  function renderStep4(){
+    state.refnr = state.refnr || ('NA-' + Math.random().toString(36).slice(2,8).toUpperCase());
+    const physItems = basket.filter(n => getInfo(n).status !== 'digi');
+    return `
+      <div class="step-card">
+        <div class="confirmation">
+          <div class="check">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <h2>Reservering bevestigd</h2>
+          <p>U bent verwacht in de <strong>${state.room.split(' — ')[0]}</strong> op <strong>${formatDate(state.date)}</strong>, tijdslot <strong>${state.timeslot}</strong>.</p>
+          <p>Wij leggen <strong>${physItems.length} stuk(ken)</strong> voor u klaar. Een bevestigingsmail is onderweg.</p>
+          <div class="ref">Referentienummer: <strong>${state.refnr}</strong></div>
+          <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:8px;">
+            <button type="button" class="btn-secondary" onclick="window.print()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+              Print bevestiging
+            </button>
+            <a href="index.html" class="btn-primary">Verder onderzoeken</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function wireUp(){
+    document.querySelectorAll('[data-remove]').forEach(b => b.addEventListener('click', () => {
+      const n = +b.dataset.remove;
+      basket = basket.filter(x => x !== n); persist(); render();
+    }));
+    document.querySelectorAll('[data-next]').forEach(b => b.addEventListener('click', () => {
+      state.step = Math.min(4, state.step + 1); render(); window.scrollTo({top:0, behavior:'smooth'});
+    }));
+    document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => {
+      state.step = Math.max(1, state.step - 1); render(); window.scrollTo({top:0, behavior:'smooth'});
+    }));
+    document.querySelectorAll('[data-login]').forEach(b => b.addEventListener('click', () => {
+      // Mock login → straight to step 4
+      state.step = 4; render(); window.scrollTo({top:0, behavior:'smooth'});
+    }));
+
+    const room = document.getElementById('r-room'); if (room) room.addEventListener('change', e => { state.room = e.target.value; syncBadges(); });
+    const date = document.getElementById('r-date'); if (date) date.addEventListener('change', e => { state.date = e.target.value; updateNext(); syncBadges(); });
+    document.querySelectorAll('.timeslot').forEach(t => t.addEventListener('click', () => {
+      document.querySelectorAll('.timeslot').forEach(x => x.setAttribute('aria-pressed','false'));
+      t.setAttribute('aria-pressed','true');
+      state.timeslot = t.dataset.time; updateNext(); syncBadges();
+    }));
+  }
+  function updateNext(){
+    const n = document.getElementById('step2-next');
+    if (n) n.disabled = !(state.date && state.timeslot);
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Onderzoeken — Nationaal Archief</title>
+<meta name="description" content="Doe historisch onderzoek in het Nationaal Archief. Zoek personen, archieven, foto's en kaarten van Nederland en zijn voormalige overzeese gebieden." />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body class="antialiased">
+
+<a href="#main" class="skip">Direct naar de hoofdinhoud</a>
+
+<div class="top-strip">
+  <div class="container">
+    <span>Een onderdeel van het Ministerie van Onderwijs, Cultuur en Wetenschap</span>
+    <div style="display:flex; gap:20px;">
+      <a href="#">Studiezaal reserveren</a>
+      <a href="#">Open data</a>
+      <a href="#" hreflang="en" lang="en">English</a>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container">
+    <a href="home.html" class="brand" aria-label="Nationaal Archief — startpagina">
+      <span class="brand-logo display">NA</span>
+      <span class="brand-name"><strong>Nationaal Archief</strong><small>Het geheugen van Nederland</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Hoofdmenu">
+      <a href="home.html" class="active" aria-current="page">Onderzoeken</a>
+      <a href="zoekhulpen.html">Zoekhulpen</a>
+      <a href="#">Beleven</a>
+      <a href="#">Archiveren</a>
+      <a href="#">Over ons</a>
+    </nav>
+    <a href="mandje.html" class="basket-btn ml-auto" aria-label="Mijn mandje (0 stukken)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Mandje <span class="badge" id="basket-badge">0</span>
+    </a>
+    <a href="#" class="icon-btn" aria-label="Mijn account">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="home-hero" aria-labelledby="hero-title">
+    <div class="home-hero-inner">
+      <h1 id="hero-title">Begin uw onderzoek</h1>
+      <p class="lead">Doorzoek meer dan 137 km aan archieven, miljoenen scans, foto's en kaarten. Van familiegeschiedenis tot VOC, van Indonesië tot Suriname.</p>
+      <form class="home-search" role="search" action="zoeken.html" method="get">
+        <label for="hero-q" class="sr-only">Zoek in het hele archief</label>
+        <input id="hero-q" name="q" type="search" placeholder="Bijv. een naam, een plaats, of 'VOC'…" autocomplete="off"/>
+        <button type="submit">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          Zoek
+        </button>
+      </form>
+      <p class="home-search-hint">Tip: zoek bijvoorbeeld op een achternaam, een plaats, of een toegangsnummer als <code style="background:rgba(255,255,255,.1); padding:1px 6px; border-radius:3px; font-family:ui-monospace,monospace;">1.04.02</code>.</p>
+    </div>
+  </section>
+
+  <!-- 3 BIG CTAS -->
+  <section class="cta-cards" aria-label="Onderzoeksingangen">
+    <a href="zoekhulpen.html#familiegeschiedenis" class="cta-card">
+      <div class="icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h3>Zoek een persoon</h3>
+      <p>Beantwoord enkele vragen en wij wijzen u naar de juiste registers en zoekhulpen voor familieonderzoek.</p>
+      <span class="arrow">Start zoekhulp →</span>
+    </a>
+    <a href="zoeken.html" class="cta-card">
+      <div class="icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M11 8v6M8 11h6"/></svg>
+      </div>
+      <h3>Doorzoek de collectie</h3>
+      <p>Zoek door alle archieven, foto's, kaarten, indexen, postwaarden en boeken in onze open zoekomgeving.</p>
+      <span class="arrow">Naar zoeken →</span>
+    </a>
+    <a href="#" class="cta-card">
+      <div class="icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-9 4 6 4-3 4 3 4-6 2 9"/><path d="M3 12h18v9H3z"/></svg>
+      </div>
+      <h3>Oorlogsarchief (CABR)</h3>
+      <p>Onderzoek het Centraal Archief Bijzondere Rechtspleging — oorlogsmisdaden en collaboratie 1940–1945.</p>
+      <span class="arrow">Naar CABR →</span>
+    </a>
+  </section>
+
+  <!-- THEMATIC TILES -->
+  <section class="section" aria-labelledby="themas-title">
+    <div class="section-title">
+      <div>
+        <h2 id="themas-title">Thematische zoekhulpen</h2>
+        <p>Twaalf onderwerpen met begeleide vragen om sneller bij de juiste bron te komen.</p>
+      </div>
+      <a href="zoekhulpen.html" class="lnk">Bekijk alle 12 zoekhulpen →</a>
+    </div>
+    <div class="tile-grid">
+      <a href="zoekhulpen.html#familiegeschiedenis" class="tile">
+        <span class="tile-emoji" aria-hidden="true">🌳</span>
+        <h3>Familiegeschiedenis</h3>
+        <p>Voorouders, doop-trouw-begraven, bevolkingsregisters</p>
+      </a>
+      <a href="zoekhulpen.html#wo2" class="tile">
+        <span class="tile-emoji" aria-hidden="true">⚔️</span>
+        <h3>Tweede Wereldoorlog</h3>
+        <p>CABR, verzet, vervolging, Indië 1942–1945</p>
+      </a>
+      <a href="zoekhulpen.html#militairen" class="tile">
+        <span class="tile-emoji" aria-hidden="true">⚓</span>
+        <h3>Militairen & Marine</h3>
+        <p>Stamboeken, monsterrollen, KNIL, dienstplicht</p>
+      </a>
+      <a href="zoekhulpen.html#slavernij" class="tile">
+        <span class="tile-emoji" aria-hidden="true">⛓️</span>
+        <h3>Slavernijverleden</h3>
+        <p>Suriname, Curaçao, vrijverklaringen, plantage-archieven</p>
+      </a>
+      <a href="zoekhulpen.html#koloniaal" class="tile">
+        <span class="tile-emoji" aria-hidden="true">⛵</span>
+        <h3>Koloniale geschiedenis</h3>
+        <p>VOC, WIC, ministeries, overzeese gebieden</p>
+      </a>
+      <a href="zoekhulpen.html#suriname" class="tile">
+        <span class="tile-emoji" aria-hidden="true">🌴</span>
+        <h3>Suriname</h3>
+        <p>Plantages, slavenregisters, gouvernement</p>
+      </a>
+      <a href="zoekhulpen.html#indonesie" class="tile">
+        <span class="tile-emoji" aria-hidden="true">🏝️</span>
+        <h3>Indonesië</h3>
+        <p>Nederlands-Indië, VOC-vestigingen, dekolonisatie</p>
+      </a>
+      <a href="zoekhulpen.html#curacao" class="tile">
+        <span class="tile-emoji" aria-hidden="true">🌊</span>
+        <h3>Curaçao</h3>
+        <p>Antilliaanse archieven, gouvernement, slavenregisters</p>
+      </a>
+      <a href="zoekhulpen.html#recht" class="tile">
+        <span class="tile-emoji" aria-hidden="true">⚖️</span>
+        <h3>Rechtspraak & veiligheid</h3>
+        <p>Hoge Raad, gerechtshoven, justitie, politie</p>
+      </a>
+      <a href="zoekhulpen.html#handel" class="tile">
+        <span class="tile-emoji" aria-hidden="true">⚓</span>
+        <h3>Handel & economie</h3>
+        <p>VOC, WIC, Nederlandsche Bank, ondernemingen</p>
+      </a>
+      <a href="zoekhulpen.html#zh" class="tile">
+        <span class="tile-emoji" aria-hidden="true">🏛️</span>
+        <h3>Zuid-Holland</h3>
+        <p>Provincie, gemeenten, notariaat, kadaster</p>
+      </a>
+      <a href="zoekhulpen.html#migratie" class="tile">
+        <span class="tile-emoji" aria-hidden="true">🛂</span>
+        <h3>Migratiegeschiedenis</h3>
+        <p>Naturalisatie, paspoorten, vluchtelingen</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- POPULAR ARCHIVES -->
+  <section class="section" aria-labelledby="archives-title">
+    <div class="section-title">
+      <div>
+        <h2 id="archives-title">Veel bekeken archieven</h2>
+        <p>Direct naar de inventaris van vaak geraadpleegde archieven.</p>
+      </div>
+    </div>
+    <div class="popular-archives">
+      <a href="index.html" class="archive-card">
+        <span class="toegang">1.04.02</span>
+        <h3>Verenigde Oost-Indische Compagnie (VOC)</h3>
+        <p class="stats">1602–1795 · 17.297 inventarisnummers · <span class="status-online">9.812 online</span></p>
+      </a>
+      <a href="#" class="archive-card">
+        <span class="toegang">1.05.01.02</span>
+        <h3>Tweede West-Indische Compagnie</h3>
+        <p class="stats">1674–1795 · 1.582 inventarisnummers · <span class="status-online">412 online</span></p>
+      </a>
+      <a href="#" class="archive-card">
+        <span class="toegang">2.10.01</span>
+        <h3>Ministerie van Koloniën</h3>
+        <p class="stats">1814–1849 · 4.860 inventarisnummers · <span class="status-online">3.211 online</span></p>
+      </a>
+    </div>
+  </section>
+
+  <!-- VEEL GEVRAAGD -->
+  <section class="section" aria-labelledby="faq-title">
+    <div class="section-title">
+      <div>
+        <h2 id="faq-title">Veel gevraagd</h2>
+      </div>
+    </div>
+    <ul style="list-style:none; padding:0; margin:0; columns: 2; column-gap: 32px;">
+      <li style="padding:10px 0; border-bottom:1px solid #e3dfd6; break-inside: avoid;"><a href="#" class="lnk">Hoe vind ik mijn voorouders?</a></li>
+      <li style="padding:10px 0; border-bottom:1px solid #e3dfd6; break-inside: avoid;"><a href="#" class="lnk">VOC-dienaar opzoeken</a></li>
+      <li style="padding:10px 0; border-bottom:1px solid #e3dfd6; break-inside: avoid;"><a href="#" class="lnk">Naturalisatiedossier opvragen</a></li>
+      <li style="padding:10px 0; border-bottom:1px solid #e3dfd6; break-inside: avoid;"><a href="#" class="lnk">CABR-dossier raadplegen</a></li>
+      <li style="padding:10px 0; border-bottom:1px solid #e3dfd6; break-inside: avoid;"><a href="#" class="lnk">Adoptiedossier inzien</a></li>
+      <li style="padding:10px 0; border-bottom:1px solid #e3dfd6; break-inside: avoid;"><a href="#" class="lnk">Slavenregisters Suriname</a></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div>
+      <a href="home.html" class="brand"><span class="brand-logo display">NA</span><span class="brand-name"><strong>Nationaal Archief</strong></span></a>
+      <p style="color:#5d6470; font-size:13.5px; margin-top:12px; max-width:320px;">Wij bewaren en delen het archief van de Nederlandse rijksoverheid en zijn voorgangers — meer dan 137 km aan documenten.</p>
+    </div>
+    <div>
+      <h4>Onderzoek</h4>
+      <ul>
+        <li><a href="home.html">Zoeken</a></li>
+        <li><a href="zoekhulpen.html">Zoekhulpen</a></li>
+        <li><a href="#">Inventarissen</a></li>
+        <li><a href="#">Open data</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Bezoek</h4>
+      <ul>
+        <li><a href="#">Studiezaal</a></li>
+        <li><a href="#">Openingstijden</a></li>
+        <li><a href="#">Tentoonstellingen</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Bron</h4>
+      <ul>
+        <li style="font-size:12.5px; color:#5d6470;">Herontwerp/concept op publieke gegevens.</li>
+        <li><a href="https://www.nationaalarchief.nl" target="_blank" rel="noopener">nationaalarchief.nl</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="legal">
+    <div class="legal-row">
+      <span>© Nationaal Archief — herontwerp / concept</span>
+      <div style="display:flex; gap:16px;">
+        <a href="#">Toegankelijkheid</a>
+        <a href="#">Privacy</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Sync basket badge from localStorage
+const basket = JSON.parse(localStorage.getItem('voc-basket') || '[]');
+document.getElementById('basket-badge').textContent = basket.length;
+</script>
+</body>
+</html>

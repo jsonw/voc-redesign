@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Zoekhulpen — Nationaal Archief</title>
+<meta name="description" content="Begin uw onderzoek met thematische zoekhulpen. Twaalf onderwerpen wijzen u naar de juiste registers en archieven."/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .page-hero { background: linear-gradient(135deg, #0a2547 0%, #154273 100%); color: #fff; padding: 60px 0 80px; }
+  .page-hero h1 { font-family: 'Fraunces', serif; font-size: 48px; line-height: 1.05; margin: 0 0 12px; letter-spacing: -0.02em; }
+  .page-hero p { font-size: 17px; line-height: 1.55; opacity: .92; max-width: 640px; margin: 0; }
+  .page-hero nav { font-size: 13px; opacity: .85; margin-bottom: 20px; }
+  .page-hero nav a { color: #fff; text-decoration: none; }
+
+  .tile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: -40px; position: relative; z-index: 5; }
+  .zh-tile { background: #fff; border: 1px solid #e3dfd6; border-radius: 12px; padding: 24px; text-decoration: none; color: inherit; transition: all .15s; box-shadow: 0 8px 24px -10px rgba(14,27,44,.15); }
+  .zh-tile:hover { border-color: #154273; transform: translateY(-2px); box-shadow: 0 16px 32px -12px rgba(14,27,44,.2); }
+  .zh-tile .emoji { font-size: 32px; display: block; margin-bottom: 12px; }
+  .zh-tile h2 { font-family: 'Fraunces', serif; font-size: 20px; margin: 0 0 6px; color: #0e1b2c; }
+  .zh-tile p { font-size: 13.5px; color: #5d6470; line-height: 1.5; margin: 0 0 14px; }
+  .zh-tile .meta { font-size: 12px; color: #0f3360; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+
+  .section { margin: 60px 0; }
+  .section h2 { font-family: 'Fraunces', serif; font-size: 28px; margin: 0 0 16px; }
+  .section p.lead { font-size: 15px; color: #5d6470; margin: 0 0 24px; max-width: 640px; line-height: 1.55; }
+
+  /* Zoekhulp wizard preview */
+  .wizard-preview { background: #f7f6f2; border: 1px solid #e3dfd6; border-radius: 12px; padding: 32px; margin: 40px 0; }
+  .wizard-preview h3 { font-family: 'Fraunces', serif; font-size: 24px; margin: 0 0 8px; }
+  .wizard-preview .sub { font-size: 14px; color: #5d6470; margin: 0 0 24px; }
+  .wizard-q { background: #fff; border: 1px solid #e3dfd6; border-radius: 10px; padding: 20px; margin-bottom: 12px; }
+  .wizard-q .q-num { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: #5d6470; margin-bottom: 8px; }
+  .wizard-q h4 { font-family: 'Fraunces', serif; font-size: 18px; margin: 0 0 14px; }
+  .wizard-q .options { display: flex; flex-wrap: wrap; gap: 8px; }
+  .wizard-q .opt { padding: 8px 14px; border: 1px solid #cfc9bc; border-radius: 999px; background: #fff; font-size: 13.5px; color: #39414e; cursor: pointer; }
+  .wizard-q .opt:hover { border-color: #154273; color: #0f3360; }
+  .wizard-q .opt.selected { background: #0f3360; color: #fff; border-color: #0f3360; }
+
+  .related-archives { background: #fff; border: 1px solid #e3dfd6; border-radius: 10px; padding: 20px; margin-top: 16px; }
+  .related-archives h4 { font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: #5d6470; margin: 0 0 12px; font-weight: 600; }
+  .related-archives ul { list-style: none; padding: 0; margin: 0; }
+  .related-archives li { padding: 8px 0; border-top: 1px solid #efece5; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+  .related-archives li:first-child { border-top: 0; }
+  .related-archives li a { color: #0f3360; text-decoration: none; font-size: 14px; }
+  .related-archives li a:hover { text-decoration: underline; }
+  .related-archives li .toegang { font-family: ui-monospace, monospace; font-size: 12px; color: #5d6470; }
+
+  @media (max-width: 1024px) {
+    .tile-grid { grid-template-columns: 1fr 1fr; }
+    .page-hero h1 { font-size: 34px; }
+  }
+  @media (max-width: 640px) {
+    .tile-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<a href="#main" class="skip">Direct naar de zoekhulpen</a>
+
+<div class="top-strip">
+  <div class="container" style="max-width:1440px;">
+    <span>Een onderdeel van het Ministerie van Onderwijs, Cultuur en Wetenschap</span>
+    <div style="display:flex; gap:20px;"><a href="#">Studiezaal reserveren</a><a href="#">Open data</a><a href="#" hreflang="en" lang="en">English</a></div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container" style="max-width:1440px;">
+    <a href="home.html" class="brand">
+      <span class="brand-logo display">NA</span>
+      <span class="brand-name"><strong>Nationaal Archief</strong><small>Het geheugen van Nederland</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Hoofdmenu">
+      <a href="home.html">Onderzoeken</a>
+      <a href="zoekhulpen.html" class="active" aria-current="page">Zoekhulpen</a>
+      <a href="#">Beleven</a>
+      <a href="#">Archiveren</a>
+    </nav>
+    <form class="global-search" role="search" action="zoeken.html" method="get">
+      <label for="gq" class="sr-only">Zoek</label>
+      <div class="global-search-form">
+        <input id="gq" name="q" type="search" placeholder="Zoek archieven, personen, scans…"/>
+        <button type="submit" aria-label="Zoeken"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      </div>
+    </form>
+    <a href="mandje.html" class="basket-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Mandje <span class="badge" id="basket-badge">0</span>
+    </a>
+    <a href="#" class="icon-btn" aria-label="Mijn account"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <nav>
+      <ol style="display:flex; gap:8px; padding:0; margin:0; list-style:none;">
+        <li><a href="home.html">Home</a></li>
+        <li style="opacity:.6;">/</li>
+        <li>Zoekhulpen</li>
+      </ol>
+    </nav>
+    <h1>Zoekhulpen</h1>
+    <p>Niet zeker waar te beginnen? Onze thematische zoekhulpen helpen u via begeleide vragen naar de juiste archieven, registers en bronnen.</p>
+  </div>
+</section>
+
+<main id="main" class="container">
+
+  <!-- TILES -->
+  <div class="tile-grid">
+    <a href="#familiegeschiedenis" class="zh-tile">
+      <span class="emoji">🌳</span>
+      <h2>Familiegeschiedenis</h2>
+      <p>Voorouders zoeken in doop-, trouw- en begraafregisters, bevolkingsregisters en VOC-monsterrollen.</p>
+      <span class="meta">Start zoekhulp →</span>
+    </a>
+    <a href="#wo2" class="zh-tile">
+      <span class="emoji">⚔️</span>
+      <h2>Tweede Wereldoorlog</h2>
+      <p>Onderzoek vervolging, verzet, oorlogsmisdaden (CABR), en de oorlog in Nederlands-Indië.</p>
+      <span class="meta">Start zoekhulp →</span>
+    </a>
+    <a href="#militairen" class="zh-tile">
+      <span class="emoji">⚓</span>
+      <h2>Militairen & Marinepersoneel</h2>
+      <p>Stamboeken, monsterrollen, dienstplicht en KNIL-personeel van 17e tot 20e eeuw.</p>
+      <span class="meta">Start zoekhulp →</span>
+    </a>
+    <a href="#slavernij" class="zh-tile">
+      <span class="emoji">⛓️</span>
+      <h2>Slavernijverleden</h2>
+      <p>Slavenregisters Suriname en Curaçao, vrijverklaringen, plantage-archieven en boedelinventarissen.</p>
+      <span class="meta">Start zoekhulp →</span>
+    </a>
+    <a href="#koloniaal" class="zh-tile">
+      <span class="emoji">⛵</span>
+      <h2>Koloniale geschiedenis</h2>
+      <p>VOC, WIC, Ministerie van Koloniën, en de overzeese vestigingen in Azië, Afrika en de Cariben.</p>
+      <span class="meta">Start zoekhulp →</span>
+    </a>
+    <a href="#suriname" class="zh-tile">
+      <span class="emoji">🌴</span>
+      <h2>Suriname</h2>
+      <p>Plantages, gouvernement, slavenregisters en kerkelijke registers van Suriname.</p>
+      <span class="meta">Start zoekhulp →</span>
+    </a>
+    <a href="#indonesie" class="zh-tile">
+      <span class="emoji">🏝️</span>
+      <h2>Indonesië</h2>
+      <p>Nederlands-Indië, VOC-vestigingen in Azië, en de dekolonisatie 1945–1949.</p>
+      <span class="meta">Start zoekhulp →</span>
+    </a>
+    <a href="#curacao" class="zh-tile">
+      <span class="emoji">🌊</span>
+      <h2>Curaçao</h2>
+      <p>Antilliaanse archieven, gouvernementsbestuur en slavenregisters van Curaçao.</p>
+      <span class="meta">Start zoekhulp →</span>
+    </a>
+    <a href="#recht" class="zh-tile">
+      <span class="emoji">⚖️</span>
+      <h2>Rechtspraak & veiligheid</h2>
+      <p>Hoge Raad, gerechtshoven, rechtbanken, justitie- en politiearchieven.</p>
+      <span class="meta">Start zoekhulp →</span>
+    </a>
+    <a href="#handel" class="zh-tile">
+      <span class="emoji">⚓</span>
+      <h2>Handel & economie</h2>
+      <p>VOC, WIC, Nederlandsche Bank, koopvaardij en grote ondernemingen.</p>
+      <span class="meta">Start zoekhulp →</span>
+    </a>
+    <a href="#zh" class="zh-tile">
+      <span class="emoji">🏛️</span>
+      <h2>Zuid-Holland</h2>
+      <p>Provinciale archieven, gemeenten, notariaat en kadaster van Zuid-Holland.</p>
+      <span class="meta">Start zoekhulp →</span>
+    </a>
+    <a href="#migratie" class="zh-tile">
+      <span class="emoji">🛂</span>
+      <h2>Migratiegeschiedenis</h2>
+      <p>Naturalisatiedossiers, paspoorten, vluchtelingen en migratie naar/uit Nederland.</p>
+      <span class="meta">Start zoekhulp →</span>
+    </a>
+  </div>
+
+  <!-- WIZARD PREVIEW -->
+  <section class="section" id="koloniaal">
+    <h2>Voorbeeld: zoekhulp Koloniale geschiedenis</h2>
+    <p class="lead">Beantwoord enkele vragen en wij wijzen u naar de juiste archieven en registers — gericht op uw onderzoek.</p>
+
+    <div class="wizard-preview">
+      <h3>Wat zoekt u in de koloniale archieven?</h3>
+      <p class="sub">Deze zoekhulp leidt u naar het meest relevante archief op basis van uw vraag.</p>
+
+      <div class="wizard-q">
+        <span class="q-num">Vraag 1 van 3</span>
+        <h4>Wat onderzoekt u?</h4>
+        <div class="options">
+          <button type="button" class="opt selected">Een persoon (VOC-dienaar, ambtenaar)</button>
+          <button type="button" class="opt">Een schip of reis</button>
+          <button type="button" class="opt">Een vestiging of plaats</button>
+          <button type="button" class="opt">Bestuurlijke besluiten</button>
+          <button type="button" class="opt">Handel en producten</button>
+        </div>
+      </div>
+
+      <div class="wizard-q">
+        <span class="q-num">Vraag 2 van 3</span>
+        <h4>In welke periode?</h4>
+        <div class="options">
+          <button type="button" class="opt">1602–1700 (vroege VOC)</button>
+          <button type="button" class="opt selected">1700–1795 (late VOC)</button>
+          <button type="button" class="opt">1795–1815 (overgangsperiode)</button>
+          <button type="button" class="opt">1815–1949 (Ministerie van Koloniën)</button>
+        </div>
+      </div>
+
+      <div class="wizard-q">
+        <span class="q-num">Vraag 3 van 3</span>
+        <h4>In welke regio?</h4>
+        <div class="options">
+          <button type="button" class="opt selected">Azië (Batavia, Coromandel, Bengalen)</button>
+          <button type="button" class="opt">Kaap de Goede Hoop</button>
+          <button type="button" class="opt">China & Japan</button>
+          <button type="button" class="opt">West-Indië (Suriname, Curaçao)</button>
+          <button type="button" class="opt">Wereldwijd / weet niet</button>
+        </div>
+      </div>
+
+      <div class="related-archives">
+        <h4>Op basis van uw antwoorden — onderzoek deze bronnen:</h4>
+        <ul>
+          <li>
+            <span><strong>VOC monsterrollen en scheepssoldijboeken</strong> — wie er aan boord van welk schip ging</span>
+            <a href="index.html">Open archief →</a>
+          </li>
+          <li>
+            <span><strong><span class="toegang">1.04.02</span> · VOC, Heeren XVII en kamers</strong> — bestuurlijke neerslag</span>
+            <a href="index.html">Open archief →</a>
+          </li>
+          <li>
+            <span><strong>Boedelinventarissen Batavia 1670–1685</strong> — voor genealogie van overzeese dienaren</span>
+            <a href="zoeken.html?q=boedelinventaris">Bekijk →</a>
+          </li>
+          <li>
+            <span><strong>Zoekhulp Familiegeschiedenis</strong> — voor uitgebreid voorouderonderzoek</span>
+            <a href="#familiegeschiedenis">Open zoekhulp →</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- HELP SECTION -->
+  <section class="section">
+    <h2>Geen passende zoekhulp gevonden?</h2>
+    <p class="lead">Onze archivarissen helpen u kosteloos met onderzoeksvragen, paleografie en het doorzoeken van complexe archieven. Stel uw vraag of plan een afspraak.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <a href="#" class="zh-tile">
+        <span class="emoji">💬</span>
+        <h2>Stel een vraag</h2>
+        <p>Krijg binnen 5 werkdagen antwoord van een archivaris.</p>
+        <span class="meta">Naar contactformulier →</span>
+      </a>
+      <a href="mandje.html" class="zh-tile">
+        <span class="emoji">📅</span>
+        <h2>Plan studiezaal-bezoek</h2>
+        <p>Reserveer een tijdslot in de studiezaal in Den Haag.</p>
+        <span class="meta">Naar reserveren →</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container" style="max-width:1440px;">
+    <div>
+      <a href="home.html" class="brand"><span class="brand-logo display">NA</span><span class="brand-name"><strong>Nationaal Archief</strong></span></a>
+      <p style="color:#5d6470; font-size:13.5px; margin-top:12px; max-width:320px;">Het archief van de Nederlandse rijksoverheid en zijn voorgangers.</p>
+    </div>
+    <div><h4>Onderzoek</h4><ul><li><a href="home.html">Zoeken</a></li><li><a href="zoekhulpen.html">Zoekhulpen</a></li></ul></div>
+    <div><h4>Bezoek</h4><ul><li><a href="#">Studiezaal</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div><h4>Bron</h4><ul><li style="font-size:12.5px;color:#5d6470;">Concept.</li></ul></div>
+  </div>
+  <div class="legal"><div class="legal-row"><span>© Nationaal Archief — concept</span></div></div>
+</footer>
+
+<script>
+const basket = JSON.parse(localStorage.getItem('voc-basket') || '[]');
+document.getElementById('basket-badge').textContent = basket.length;
+
+// Toggle wizard option styling on click (visual demo)
+document.querySelectorAll('.wizard-q .options').forEach(group => {
+  group.addEventListener('click', e => {
+    if (e.target.classList.contains('opt')) {
+      group.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+      e.target.classList.add('selected');
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -664,18 +664,11 @@
         const s = SECTION[curSection];
         const cnt = data.filter(x => x.section===curSection).length;
         html += `<div class="section-head">
-          <div class="crumb">
-            <span>Deel I — Compagniesarchieven</span>
-            <span class="sep">›</span>
-            <span>A. Heren XVII en kamer Amsterdam</span>
-            <span class="sep">›</span>
-            <strong style="color:#0e1b2c;">${s.lbl} (${s.rng})</strong>
-          </div>
           <div class="head-row">
-            <h3>${s.lbl} <span class="num" style="color:#5d6470; font-weight:400; font-size:18px;">${s.rng}</span></h3>
-            <span class="meta num">${cnt} stukken</span>
+            <h3>${s.lbl} <span class="rng">${s.rng}</span></h3>
+            <span class="meta">${cnt} stukken</span>
           </div>
-          <p style="font-size:13.5px; color:#5d6470; margin:6px 0 0;">${s.desc}</p>
+          <p class="scope">${s.desc}</p>
         </div>`;
       }
       const st = STATUS[d.status];
@@ -690,10 +683,7 @@
         </button>`;
     });
 
-    html += `<div class="section-foot">
-      <span style="color:#5d6470;">Einde van Deel I · A — 96 stukken in deze sectie.</span>
-      <a href="#">Volgende sectie: B. Kamer Zeeland (4.470–7.443) <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
-    </div>`;
+    html += `<div class="section-foot">Einde van deze sectie · ${rows.length} ${rows.length===1?'stuk':'stukken'} getoond</div>`;
 
     rowsEl.innerHTML = html || `<p style="padding:40px; text-align:center; color:#5d6470;">Geen resultaten — pas filters of zoekterm aan.</p>`;
     resultC.textContent = `${rows.length} van ${data.length} stukken (Deel I · A)`;

@@ -246,22 +246,6 @@
 
       <div class="arch-nav-group" data-open="true">
         <div class="arch-nav-group-head" data-toggle-group>
-          Archiefbeschrijving
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
-        </div>
-        <div class="arch-nav-list">
-          <button data-view="archief" data-anchor="top" class="active">Archief — overzicht</button>
-          <button data-view="archief" data-anchor="beschrijving">Beschrijving van het archief</button>
-          <button data-view="archief" data-anchor="archiefvorming">Archiefvorming</button>
-          <button data-view="archief" data-anchor="inhoud">Inhoud en structuur</button>
-          <button data-view="archief" data-anchor="aanwijzingen">Aanwijzingen voor de gebruiker</button>
-          <button data-view="archief" data-anchor="verwant">Verwant materiaal</button>
-          <button data-view="archief" data-anchor="bijlagen">Bijlagen</button>
-        </div>
-      </div>
-
-      <div class="arch-nav-group" data-open="true">
-        <div class="arch-nav-group-head" data-toggle-group>
           Archiefbestanddelen
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
         </div>
@@ -271,7 +255,7 @@
             Deel I — Compagniesarchieven
           </button>
           <div class="l3-children">
-            <button data-view="bestanddeel-A" class="l2">A. Heren XVII / Amsterdam</button>
+            <button data-view="bestanddeel-A" class="l2 active">A. Heren XVII / Amsterdam</button>
             <button data-view="bestanddeel-B" class="l2">B. Kamer Zeeland</button>
             <button data-view="bestanddeel-C" class="l2">C. Kamer Delft</button>
             <button data-view="bestanddeel-D" class="l2">D. Kamer Rotterdam</button>
@@ -292,6 +276,23 @@
           <div class="l3-children">
             <button data-view="bestanddeel-III" class="l2">Kaap de Goede Hoop, China en aanverwante series</button>
           </div>
+        </div>
+      </div>
+
+      <!-- Archiefbeschrijving — ingeklapt by default, secundair t.o.v. inventaris -->
+      <div class="arch-nav-group" data-open="false">
+        <div class="arch-nav-group-head" data-toggle-group>
+          Archiefbeschrijving
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <div class="arch-nav-list">
+          <button data-view="archief" data-anchor="top">Archief — overzicht</button>
+          <button data-view="archief" data-anchor="beschrijving">Beschrijving van het archief</button>
+          <button data-view="archief" data-anchor="archiefvorming">Archiefvorming</button>
+          <button data-view="archief" data-anchor="inhoud">Inhoud en structuur</button>
+          <button data-view="archief" data-anchor="aanwijzingen">Aanwijzingen voor de gebruiker</button>
+          <button data-view="archief" data-anchor="verwant">Verwant materiaal</button>
+          <button data-view="archief" data-anchor="bijlagen">Bijlagen</button>
         </div>
       </div>
 
@@ -324,7 +325,7 @@
     <div>
 
       <!-- VIEW: Archief — gecombineerde archiefbeschrijving met anchor-secties -->
-      <section class="view active" data-view="archief">
+      <section class="view" data-view="archief">
 
         <!-- Top intro -->
         <div id="top">
@@ -458,7 +459,7 @@
       </section>
 
       <!-- VIEW: Inventaris (Deel I/A — default actief in tree) -->
-      <section class="view" data-view="bestanddeel-A">
+      <section class="view active" data-view="bestanddeel-A">
 
         <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom: 6px; flex-wrap:wrap;">
           <p class="kicker" style="font-size:11.5px; text-transform:uppercase; letter-spacing:.12em; color:#154273; font-weight:600; margin:0;">Deel I · Bestanddeel A</p>
@@ -1004,14 +1005,44 @@
     if (e.target===m) { m.style.display='none'; document.body.style.overflow=''; if (state.currentN && m.id==='modal-detail') closeDetail(); }
   }));
 
-  // Side panel
+  // ===== Side panel (Zoekhulp) =====
   const zhPanel = document.getElementById('zh-panel');
   const zhBackdrop = document.getElementById('zh-backdrop');
-  function openZh(){ zhPanel.hidden=false; zhBackdrop.classList.add('open'); requestAnimationFrame(()=>zhPanel.classList.add('open')); document.body.style.overflow='hidden'; }
-  function closeZh(){ zhPanel.classList.remove('open'); zhBackdrop.classList.remove('open'); setTimeout(()=>{zhPanel.hidden=true;}, 300); document.body.style.overflow=''; }
-  document.getElementById('open-zoekhulp').addEventListener('click', openZh);
-  document.getElementById('zh-close').addEventListener('click', closeZh);
-  zhBackdrop.addEventListener('click', closeZh);
+  function openZh(){
+    if (!zhPanel) return;
+    zhPanel.hidden = false;
+    zhBackdrop.classList.add('open');
+    // Force layout flush before adding .open so transition fires
+    void zhPanel.offsetWidth;
+    zhPanel.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeZh(){
+    if (!zhPanel) return;
+    zhPanel.classList.remove('open');
+    zhBackdrop.classList.remove('open');
+    setTimeout(() => { zhPanel.hidden = true; }, 300);
+    document.body.style.overflow = '';
+  }
+  // Wire ALL buttons that should open the zoekhulp side panel
+  document.querySelectorAll('#open-zoekhulp, [data-open-zoekhulp]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openZh(); }));
+  document.getElementById('zh-close')?.addEventListener('click', closeZh);
+  zhBackdrop?.addEventListener('click', closeZh);
+
+  // ===== Popovers: sluit andere wanneer er een opent =====
+  document.querySelectorAll('details.filter-popover').forEach(d => {
+    d.addEventListener('toggle', () => {
+      if (d.open) {
+        document.querySelectorAll('details.filter-popover').forEach(o => { if (o !== d) o.open = false; });
+      }
+    });
+  });
+  // Klik buiten popover sluit alle popovers
+  document.addEventListener('click', e => {
+    if (!e.target.closest('details.filter-popover')) {
+      document.querySelectorAll('details.filter-popover').forEach(d => d.open = false);
+    }
+  });
 
   document.addEventListener('keydown', e => {
     if (e.target.matches('input,textarea,select')) return;
@@ -1031,6 +1062,12 @@
   document.getElementById('basket-badge').textContent = basket.length;
 
   render();
+
+  // Deep-link: open detail-modal als URL ?n=X bevat (vanuit zoeken/Google)
+  const initialN = +new URLSearchParams(location.search).get('n');
+  if (initialN && data.find(d => d.n === initialN)) {
+    setTimeout(() => openDetail(initialN), 100);
+  }
 })();
 </script>
 </body>

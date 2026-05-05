@@ -897,22 +897,11 @@
     render();
   });
   searchEl.addEventListener('input', e => { state.q = e.target.value; render(); });
-  document.getElementById('search-btn').addEventListener('click', () => render());
-
-  // Filters toggle
-  const filtersToggle = document.getElementById('filters-toggle');
-  const filterPanel = document.getElementById('filter-panel');
-  filtersToggle.addEventListener('click', () => {
-    const ex = filtersToggle.getAttribute('aria-expanded') === 'true';
-    filtersToggle.setAttribute('aria-expanded', !ex);
-    filterPanel.hidden = ex;
-    filtersToggle.childNodes[2].nodeValue = ex ? ' Filters tonen ' : ' Filters verbergen ';
-  });
+  document.getElementById('search-btn')?.addEventListener('click', () => render());
 
   // Section paging (A → B → C ...)
-  const sections = ['bestanddeel-A','bestanddeel-B','bestanddeel-C','bestanddeel-D','bestanddeel-E','bestanddeel-F'];
-  document.getElementById('paging-prev').addEventListener('click', ()=>{ /* always at A in demo */ });
-  document.getElementById('paging-next').addEventListener('click', ()=>{ showView('bestanddeel-B'); });
+  document.getElementById('paging-prev')?.addEventListener('click', ()=>{ /* always at A in demo */ });
+  document.getElementById('paging-next')?.addEventListener('click', ()=>{ showView('bestanddeel-B'); });
 
   // ==== Detail modal ====
   function openDetail(n){
@@ -1057,9 +1046,12 @@
     }
   });
 
-  // Sync basket badge
-  const basket = JSON.parse(localStorage.getItem('voc-basket') || '[]');
-  document.getElementById('basket-badge').textContent = basket.length;
+  // Sync basket badge (defensief: localStorage kan blokkeren in private mode)
+  try {
+    const basket = JSON.parse(localStorage.getItem('voc-basket') || '[]');
+    const badge = document.getElementById('basket-badge');
+    if (badge) badge.textContent = basket.length;
+  } catch (_) { /* silently ignore */ }
 
   render();
 

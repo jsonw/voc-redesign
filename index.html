@@ -173,6 +173,25 @@
 
   svg { stroke-width: 1.5; }
 
+  /* Compact modal */
+  .modal-compact { max-width: 560px !important; border-radius: 6px; }
+  .modal-head-compact { padding: 18px 22px 16px !important; }
+  .modal-body-compact { padding: 16px 22px !important; }
+  .modal-nav-compact { padding: 10px 14px !important; }
+  .modal-nav-compact a { font-size: 13px !important; padding: 6px 10px !important; }
+  .md-meta-details { margin-top: 14px; padding-top: 14px; border-top: 1px solid #e3dfd6; }
+  .md-meta-details summary { font-size: 13px; color: #0f3360; font-weight: 500; padding: 4px 0; cursor: pointer; }
+  .md-meta-details summary:hover { text-decoration: underline; }
+  .md-meta-details[open] summary::after { content: " ↑"; }
+  .md-meta-details:not([open]) summary::after { content: " ↓"; }
+  .md-meta-list { margin-top: 10px; grid-template-columns: 130px 1fr !important; }
+  .md-meta-list dt, .md-meta-list dd { padding: 6px 0 !important; font-size: 13px !important; }
+  .modal-body-compact .preview-block { margin-bottom: 14px; }
+  .modal-body-compact .preview-block .preview-img { aspect-ratio: 16/8; }
+  .modal-body-compact .restricted-block { margin-bottom: 14px; padding: 14px; }
+  .modal-body-compact .restricted-block h3 { font-size: 15px; }
+  .modal-body-compact .restricted-block p { font-size: 13.5px; }
+
   @media (max-width: 1024px) {
     .archive-hero h1 { font-size: 28px; }
     .archive-hero h1 small { font-size: 18px; }
@@ -468,22 +487,21 @@
         <h2 style="margin: 0 0 8px;">A. Heren XVII en kamer Amsterdam</h2>
         <p style="font-size:14.5px; color:#5d6470; margin: 0 0 24px; max-width:760px;">Archieven van de centrale vergadering en de kamer Amsterdam — onderling sterk vermengd. Bevat octrooien (charters van de Staten-Generaal) en resoluties van de Heren XVII.</p>
 
-        <!-- TOOLBAR: search + paging -->
+        <!-- TOOLBAR: zoek + sectienavigatie -->
         <div class="inv-toolbar">
           <div class="inv-search" role="search">
             <label for="search" class="sr-only">Zoek in dit bestanddeel</label>
-            <input id="search" type="search" placeholder="VOC" />
+            <input id="search" type="search" placeholder="Zoek op nummer, titel of jaartal" />
             <select id="search-scope" aria-label="Zoekbereik">
-              <option value="bestanddelen">Zoek in archiefbestanddelen</option>
-              <option value="beschrijving">Zoek in archiefbeschrijving</option>
-              <option value="invnr">Zoek naar inventarisnummer</option>
+              <option value="bestanddelen">In dit bestanddeel</option>
+              <option value="beschrijving">In archiefbeschrijving</option>
+              <option value="invnr">Op inventarisnummer</option>
             </select>
             <button type="button" id="search-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> Zoek</button>
           </div>
           <div class="inv-paging" aria-label="Sectie-navigatie">
-            <span class="pos"><span id="paging-cur">A</span> / 6</span>
-            <button id="paging-prev" aria-label="Vorig bestanddeel" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m15 18-6-6 6-6"/></svg></button>
-            <button id="paging-next" aria-label="Volgend bestanddeel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 18 6-6-6-6"/></svg></button>
+            <button id="paging-prev" aria-label="Vorig bestanddeel" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m15 18-6-6 6-6"/></svg> Vorige</button>
+            <button id="paging-next" aria-label="Volgend bestanddeel">Volgende: B. Kamer Zeeland <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 18 6-6-6-6"/></svg></button>
           </div>
         </div>
 
@@ -536,19 +554,19 @@
             </div>
           </details>
 
-          <div style="margin-left:auto; display:flex; align-items:center; gap:10px;">
-            <label for="sort" style="font-size:13px; color:#5d6470;">Sorteer:</label>
-            <select id="sort" style="font-size:13.5px; border:1px solid #cfc9bc; border-radius:4px; padding:6px 10px; background:#fff;">
+        </div>
+
+        <!-- Active filter pills + sorteer -->
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin: 12px 0; min-height:32px;">
+          <div id="chips" style="display:flex; flex-wrap:wrap; gap:8px; flex:1;"></div>
+          <button id="reset-filters" type="button" class="btn-link" hidden>Wis alle filters</button>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <label for="sort" style="font-size:13px; color:#5d6470;">Sorteer op:</label>
+            <select id="sort" style="font-size:13.5px; border:1px solid #cfc9bc; border-radius:4px; padding:6px 10px; background:#fff; font-family:inherit;">
               <option value="nr">Nummer</option>
               <option value="year">Jaartal</option>
             </select>
           </div>
-        </div>
-
-        <!-- Active filter pills -->
-        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px; min-height:28px;">
-          <div id="chips" style="display:flex; flex-wrap:wrap; gap:8px; flex:1;"></div>
-          <button id="reset-filters" type="button" class="btn-link" hidden>Wis alle filters</button>
         </div>
 
         <div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="result-announce"></div>
@@ -581,45 +599,39 @@
   </div>
 </main>
 
-<!-- DETAIL MODAL -->
+<!-- DETAIL MODAL — compact -->
 <div class="modal-backdrop" id="modal-detail" hidden role="dialog" aria-modal="true" aria-labelledby="md-title" style="display:none;">
-  <div class="modal" style="max-width: 760px;">
-    <div class="modal-head">
+  <div class="modal modal-compact">
+    <div class="modal-head modal-head-compact">
       <div style="flex:1; min-width:0;">
-        <nav style="font-size:12px; color:#5d6470; margin-bottom:6px;" aria-label="Plaats in archief">
-          <span class="num">1.04.02</span><span style="color:#b3c7e2; margin: 0 6px;">›</span>
-          <span>Deel I · A</span><span style="color:#b3c7e2; margin: 0 6px;">›</span>
-          <span id="md-section-bc">—</span><span style="color:#b3c7e2; margin: 0 6px;">›</span>
-          <span id="md-n-bc" class="num" style="color:#0e1b2c; font-weight:500;">nr. —</span>
-        </nav>
-        <p class="kicker" id="md-section" style="font-size:11.5px; color:#154273; text-transform:uppercase; letter-spacing:.12em; font-weight:600; margin:0 0 4px;">—</p>
-        <h2 id="md-title">—</h2>
-        <p style="margin-top:10px;"><span id="md-status-badge" class="status-badge">—</span></p>
+        <p class="kicker" id="md-section" style="font-size:11px; color:#154273; text-transform:uppercase; letter-spacing:.1em; font-weight:600; margin:0 0 4px;">—</p>
+        <h2 id="md-title" style="font-size:20px; line-height:1.25; margin:0;">—</h2>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:8px; flex-wrap:wrap;">
+          <span id="md-status-badge" class="status-badge">—</span>
+          <span id="md-n-bc" class="num" style="font-size:12.5px; color:#5d6470;">inv.nr —</span>
+          <span id="md-date-bc" class="num" style="font-size:12.5px; color:#5d6470;"></span>
+        </div>
       </div>
-      <button class="modal-close" data-close-modal aria-label="Sluit detailweergave"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <button class="modal-close" data-close-modal aria-label="Sluit detailweergave"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body modal-body-compact">
       <div id="md-preview"></div>
-      <p style="font-size:14.5px; color:#39414e; line-height:1.6; margin: 0 0 20px;" id="md-note"></p>
-      <div style="margin-bottom: 24px;">
-        <h3 style="font-size:14px; text-transform:uppercase; letter-spacing:.1em; font-family:Inter,sans-serif; color:#5d6470; font-weight:600; margin:0 0 8px;">Inhoud en context</h3>
-        <p style="font-size:14.5px; color:#39414e; line-height:1.6; margin:0;" id="md-context"></p>
-      </div>
-      <div id="md-actions" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom: 24px;"></div>
-      <h3 style="font-size:14px; text-transform:uppercase; letter-spacing:.1em; font-family:Inter,sans-serif; color:#5d6470; font-weight:600; margin:0 0 8px;">Metadata</h3>
-      <dl class="spec" style="margin-bottom:20px;">
-        <div><dt>Inventarisnummer</dt><dd class="num" id="md-m-n">—</dd></div>
-        <div><dt>Datering</dt><dd id="md-m-date">—</dd></div>
-        <div><dt>Hoofdrubriek</dt><dd id="md-m-rubriek">—</dd></div>
-        <div><dt>Vorm</dt><dd id="md-m-form">—</dd></div>
-        <div><dt>Taal</dt><dd>Nederlands (17e/18e eeuws)</dd></div>
-        <div><dt>Identifier</dt><dd class="urn" style="font-size:12.5px;" id="md-m-urn">—</dd></div>
-      </dl>
+      <p style="font-size:14px; color:#39414e; line-height:1.55; margin: 0 0 16px;" id="md-context"></p>
+      <div id="md-actions" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom: 16px;"></div>
+      <details class="md-meta-details">
+        <summary>Toon volledige metadata</summary>
+        <dl class="spec md-meta-list">
+          <div><dt>Vorm</dt><dd id="md-m-form">—</dd></div>
+          <div><dt>Hoofdrubriek</dt><dd id="md-m-rubriek">—</dd></div>
+          <div><dt>Taal</dt><dd>Nederlands (17e/18e eeuws)</dd></div>
+          <div><dt>Identifier</dt><dd class="urn" style="font-size:12px;" id="md-m-urn">—</dd></div>
+        </dl>
+      </details>
     </div>
-    <div class="modal-nav">
-      <a href="javascript:void(0)" id="md-prev" style="visibility:hidden;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg> <span id="md-prev-lbl">Vorige</span></a>
+    <div class="modal-nav modal-nav-compact">
+      <a href="javascript:void(0)" id="md-prev" style="visibility:hidden;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg> <span id="md-prev-lbl">Vorige</span></a>
       <span class="center"><span id="md-pos">— / 96</span></span>
-      <a href="javascript:void(0)" id="md-next" style="visibility:hidden;"><span id="md-next-lbl">Volgende</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+      <a href="javascript:void(0)" id="md-next" style="visibility:hidden;"><span id="md-next-lbl">Volgende</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
     </div>
   </div>
 </div>
@@ -653,19 +665,56 @@
     <button class="modal-close" id="zh-close" aria-label="Sluit zoekhulp"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
   </div>
   <div class="side-panel-body">
-    <p style="font-size:14.5px; color:#39414e; line-height:1.6;">Het VOC-archief is omvangrijk. Deze zoekhulp helpt u te bepalen welk type bron u nodig heeft op basis van uw onderzoeksvraag.</p>
-    <h3 style="font-size:17px; margin: 18px 0 10px;">Wat zoekt u?</h3>
-    <div style="display:flex; flex-direction:column; gap:8px;">
-      <a href="#" style="display:block; padding:12px 14px; background:#f7f6f2; border-radius:4px; text-decoration:none; color:#0e1b2c;"><strong style="display:block; color:#0f3360; margin-bottom:2px;">Een persoon (VOC-dienaar)</strong><small style="color:#5d6470;">Matrozen, soldaten, kooplieden — zoek in scheepssoldijboeken en monsterrollen</small></a>
-      <a href="#" style="display:block; padding:12px 14px; background:#f7f6f2; border-radius:4px; text-decoration:none; color:#0e1b2c;"><strong style="display:block; color:#0f3360; margin-bottom:2px;">Een schip of zeereis</strong><small style="color:#5d6470;">Specifieke uitreis of thuisreis, vergaan schepen</small></a>
-      <a href="#" style="display:block; padding:12px 14px; background:#f7f6f2; border-radius:4px; text-decoration:none; color:#0e1b2c;"><strong style="display:block; color:#0f3360; margin-bottom:2px;">Een vestiging of plaats</strong><small style="color:#5d6470;">Batavia, Coromandel, de Kaap en andere VOC-loges</small></a>
-      <a href="#" style="display:block; padding:12px 14px; background:#f7f6f2; border-radius:4px; text-decoration:none; color:#0e1b2c;"><strong style="display:block; color:#0f3360; margin-bottom:2px;">Een bestuurlijk besluit</strong><small style="color:#5d6470;">Resoluties van de Heren XVII, instructies aan vestigingen</small></a>
-    </div>
-    <h3 style="font-size:17px; margin: 24px 0 10px;">Tips</h3>
-    <ul style="font-size:14px; color:#39414e; line-height:1.6; padding-left:18px; margin: 0;">
-      <li style="margin-bottom:8px;">Spelling van persoonsnamen varieert sterk in de 17e/18e eeuw. Probeer varianten.</li>
-      <li style="margin-bottom:8px;">Veel scans zijn nog niet getranscribeerd — u leest het oude handschrift zelf.</li>
-      <li style="margin-bottom:8px;">Begin breed, verfijn pas later op naam of detail.</li>
+    <p style="font-size:14.5px; color:#39414e; line-height:1.6; padding:14px 16px; background:#eef3fa; border-radius:4px; border-left:4px solid #154273;"><strong>Welke personeelsgegevens zoek ik van VOC-scheepsopvarenden?</strong></p>
+
+    <p style="font-size:14px; color:#39414e; line-height:1.6;">Voor onderzoek naar matrozen, soldaten, kooplieden en ambtenaren in dienst van de Compagnie volgt u onderstaande stappen. Uw onderzoek begint bij de online <strong>index VOC-opvarenden</strong> en gaat van daar verder de archieven in.</p>
+
+    <h3 style="font-size:16px; margin: 22px 0 8px;">Stap 1 · Index VOC-opvarenden raadplegen</h3>
+    <p style="font-size:13.5px; color:#39414e; line-height:1.55; margin:0 0 8px;">Zoek in de online index op de naam van uw voorouder. U vindt:</p>
+    <ul style="font-size:13.5px; color:#39414e; line-height:1.55; padding-left:18px; margin:0;">
+      <li style="margin-bottom:4px;">de schepen waarop hij voer</li>
+      <li style="margin-bottom:4px;">zijn functie en dienstperiode</li>
+      <li>het archief-referentienummer</li>
+    </ul>
+    <p style="margin-top:10px;"><a href="#" class="lnk lnk-arrow" style="font-size:13.5px;">Open zoekmachine VOC-opvarenden</a></p>
+
+    <h3 style="font-size:16px; margin: 22px 0 8px;">Stap 2 · Scheepssoldijboeken</h3>
+    <p style="font-size:13.5px; color:#39414e; line-height:1.55;"><em>De scheepsnaam geeft vervolgens toegang tot de scheepssoldijboeken.</em> Hierin staat:</p>
+    <ul style="font-size:13.5px; color:#39414e; line-height:1.55; padding-left:18px; margin:0;">
+      <li style="margin-bottom:4px;">plaats van herkomst</li>
+      <li style="margin-bottom:4px;">rang bij indiensttreding</li>
+      <li style="margin-bottom:4px;">gage en duur van de reis</li>
+      <li>datum en plaats van overlijden of ontslag</li>
+    </ul>
+    <p style="font-size:12.5px; color:#5d6470; margin-top:8px; font-style:italic;">2.991 banden, verdeeld over de zes kamers (Amsterdam, Zeeland, Delft, Rotterdam, Hoorn, Enkhuizen).</p>
+
+    <h3 style="font-size:16px; margin: 22px 0 8px;">Stap 3 · Monsterrollen (indien nodig)</h3>
+    <p style="font-size:13.5px; color:#39414e; line-height:1.55;">Voor onderzoek <strong>vóór 1720</strong> raadpleegt u de Zeeuwse monsterrollen (1691–1791); <strong>na 1720</strong> de Amsterdamse (1720–1791). Deze tonen:</p>
+    <ul style="font-size:13.5px; color:#39414e; line-height:1.55; padding-left:18px; margin:0;">
+      <li style="margin-bottom:4px;">geboorte- of herkomstplaats</li>
+      <li style="margin-bottom:4px;">huidige rang</li>
+      <li style="margin-bottom:4px;">scheepsnaam en jaar van aankomst</li>
+      <li>kamer waaruit men werd uitgezonden</li>
+    </ul>
+    <p style="font-size:12.5px; color:#5d6470; margin-top:8px;">
+      Inv.nrs Amsterdam: <span class="num">5168–5239</span> · Zeeland: <span class="num">11534–11820</span>
+    </p>
+
+    <h3 style="font-size:16px; margin: 22px 0 8px;">Stap 4 · Kwaliteitsrollen</h3>
+    <p style="font-size:13.5px; color:#39414e; line-height:1.55;">Was uw voorouder <em>jong assistent</em> (civiel) of <em>sergeant</em> en hoger (militair)? Dan zijn er aanvullende kwaliteitsrollen met promoties en salarisverhogingen.</p>
+
+    <h3 style="font-size:16px; margin: 22px 0 8px;">Aanvullende bronnen</h3>
+    <ul style="font-size:13.5px; color:#39414e; line-height:1.55; padding-left:18px; margin:0;">
+      <li style="margin-bottom:6px;"><strong>VOC: testamenten 1698–1807</strong> — voor nalatenschappen overzee</li>
+      <li style="margin-bottom:6px;"><strong>Boedelinventarissen Batavia</strong> (inv.nrs 6873–6877) — bezittingen van overledenen</li>
+      <li><strong>Generale Missiven</strong> — jaarverslagen Gouverneur-Generaal aan Heren XVII</li>
+    </ul>
+
+    <h3 style="font-size:16px; margin: 22px 0 8px;">Tips voor onderzoek in oude bronnen</h3>
+    <ul style="font-size:13.5px; color:#39414e; line-height:1.55; padding-left:18px; margin: 0;">
+      <li style="margin-bottom:6px;">Spelling van persoonsnamen varieert sterk in de 17e en 18e eeuw — probeer varianten als <em>Jansz., Janse, Jansen, Janssens</em>.</li>
+      <li style="margin-bottom:6px;">Veel scans zijn nog niet getranscribeerd — u leest het 17e-eeuwse handschrift zelf. Onze paleografie-cursus (online, gratis) helpt.</li>
+      <li>Begin breed (regio, periode, type stuk) en verfijn pas later op naam of detail.</li>
     </ul>
   </div>
   <div class="side-panel-foot"><a href="zoekhulpen.html" class="btn-link lnk-arrow">Bekijk alle zoekhulpen</a></div>
@@ -847,7 +896,18 @@
     rowsEl.innerHTML = html || '<p style="padding:40px; text-align:center; color:#5d6470;">Geen resultaten — pas filters of zoekterm aan.</p>';
     resultC.textContent = `${rows.length} van ${data.length} stukken`;
     announce.textContent = `${rows.length} resultaten`;
-    rowsEl.querySelectorAll('.row').forEach(r => r.addEventListener('click', () => openDetail(+r.dataset.n)));
+    rowsEl.querySelectorAll('.row').forEach(r => {
+      r.addEventListener('click', () => {
+        const n = +r.dataset.n;
+        const d = data.find(x => x.n === n);
+        // Online stuk → meteen naar viewer in nieuw tabblad
+        if (d && d.status === 'digi') {
+          window.open(`viewer.html?n=${n}`, '_blank', 'noopener');
+        } else {
+          openDetail(n);
+        }
+      });
+    });
     renderChips();
   }
 
@@ -911,8 +971,8 @@
     const isOnline = d.status === 'digi';
     const sectionLabel = d.section==='octrooien' ? 'Octrooien (1–22)' : 'Resoluties Heren XVII (23–96)';
 
-    document.getElementById('md-section-bc').textContent = d.section==='octrooien' ? 'Octrooien' : 'Resoluties';
-    document.getElementById('md-n-bc').textContent = `nr. ${d.n}`;
+    const bcN = document.getElementById('md-n-bc'); if (bcN) bcN.textContent = `inv.nr ${d.n}`;
+    const bcD = document.getElementById('md-date-bc'); if (bcD && d.date) bcD.textContent = `· ${d.date}`;
     document.getElementById('md-section').textContent = sectionLabel;
     document.getElementById('md-title').textContent = d.title;
     document.getElementById('md-note').textContent = d.note || '';
@@ -922,8 +982,7 @@
     badge.className = `status-badge ${st.badge}`;
     badge.innerHTML = `<span class="dot" style="background:${st.dot}"></span>${st.full}`;
 
-    document.getElementById('md-m-n').textContent = d.n;
-    document.getElementById('md-m-date').textContent = d.date || '—';
+    // (md-m-n + md-m-date verplaatst naar header — niet meer in metadata-list)
     document.getElementById('md-m-rubriek').textContent = sectionLabel;
     document.getElementById('md-m-form').textContent = d.form || '—';
     document.getElementById('md-m-urn').textContent = `urn:nl:nationaalarchief:1.04.02:${d.n}`;

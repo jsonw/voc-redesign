@@ -192,6 +192,20 @@
   .modal-body-compact .restricted-block h3 { font-size: 15px; }
   .modal-body-compact .restricted-block p { font-size: 13.5px; }
 
+  /* Zoekhulp side-panel hub */
+  .zh-cat-btn { background: #fff; border: 1px solid #cfc9bc; border-radius: 999px; padding: 5px 11px; font-size: 12.5px; color: #39414e; cursor: pointer; font-family: inherit; }
+  .zh-cat-btn:hover { border-color: #154273; color: #0f3360; }
+  .zh-cat-btn[aria-pressed="true"] { background: #154273; border-color: #154273; color: #fff; }
+  .zh-item { display: block; padding: 14px 16px; border: 1px solid #e3dfd6; border-radius: 4px; margin-bottom: 10px; text-decoration: none; color: inherit; cursor: pointer; transition: all .12s; background: #fff; }
+  .zh-item:hover { border-color: #154273; background: #f7f9fd; }
+  .zh-item strong { display: block; color: #0f3360; font-size: 14.5px; margin-bottom: 3px; font-weight: 500; }
+  .zh-item small { display: block; color: #5d6470; font-size: 13px; line-height: 1.45; }
+  .zh-item .zh-tags { display: inline-block; margin-top: 8px; font-size: 11px; color: #7e8492; text-transform: uppercase; letter-spacing: .08em; font-weight: 500; }
+  .zh-item.hidden { display: none; }
+
+  /* Paging buttons — wrap to 2 lines on narrow */
+  .inv-paging button { white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+
   @media (max-width: 1024px) {
     .archive-hero h1 { font-size: 28px; }
     .archive-hero h1 small { font-size: 18px; }
@@ -586,14 +600,14 @@
         </div>
       </section>
 
-      <!-- Placeholder views for other Delen -->
-      <section class="view" data-view="bestanddeel-B"><h2>B. Kamer Zeeland</h2><p>Concept-pagina. In de echte implementatie zou hier de inventaris van bestanddeel B (4.470–7.443) staan met dezelfde toolbar, filters en lijst.</p></section>
-      <section class="view" data-view="bestanddeel-C"><h2>C. Kamer Delft</h2><p>Concept-pagina. Inv.nrs 7.444–8.114.</p></section>
-      <section class="view" data-view="bestanddeel-D"><h2>D. Kamer Rotterdam</h2><p>Concept-pagina. Inv.nrs 8.115–8.886.</p></section>
-      <section class="view" data-view="bestanddeel-E"><h2>E. Kamer Hoorn</h2><p>Concept-pagina. Inv.nrs 8.887–10.205.</p></section>
-      <section class="view" data-view="bestanddeel-F"><h2>F. Kamer Enkhuizen</h2><p>Concept-pagina. Inv.nrs 10.206–11.443.</p></section>
-      <section class="view" data-view="bestanddeel-II"><h2>Deel II — Overgekomen brieven en papieren uit Azië</h2><p>Concept-pagina. Inv.nrs 11.444–14.799.</p></section>
-      <section class="view" data-view="bestanddeel-III"><h2>Deel III — Kaap, China en aanverwante series</h2><p>Concept-pagina. Inv.nrs 14.800–17.297.</p></section>
+      <!-- Andere bestanddelen — gegenereerde voorbeeldlijsten -->
+      <section class="view" data-view="bestanddeel-B" data-section-info="B. Kamer Zeeland|4470-7443|2.974|1.812"></section>
+      <section class="view" data-view="bestanddeel-C" data-section-info="C. Kamer Delft|7444-8114|671|389"></section>
+      <section class="view" data-view="bestanddeel-D" data-section-info="D. Kamer Rotterdam|8115-8886|772|421"></section>
+      <section class="view" data-view="bestanddeel-E" data-section-info="E. Kamer Hoorn|8887-10205|1.319|712"></section>
+      <section class="view" data-view="bestanddeel-F" data-section-info="F. Kamer Enkhuizen|10206-11443|1.238|689"></section>
+      <section class="view" data-view="bestanddeel-II" data-section-info="Deel II — Overgekomen brieven uit Azië|11444-14799|3.356|1.842"></section>
+      <section class="view" data-view="bestanddeel-III" data-section-info="Deel III — Kaap, China en aanverwante series|14800-17297|2.498|1.421"></section>
 
     </div>
   </div>
@@ -657,17 +671,104 @@
   </div>
 </div>
 
-<!-- ZOEKHULP SIDE PANEL -->
+<!-- ZOEKHULP SIDE PANEL — hub met zoek + alle zoekhulpen -->
 <div class="side-panel-backdrop" id="zh-backdrop"></div>
-<aside class="side-panel" id="zh-panel" role="complementary" aria-label="Zoekhulp" hidden>
+<aside class="side-panel" id="zh-panel" role="complementary" aria-label="Zoekhulpen" hidden>
   <div class="side-panel-head">
-    <div><p style="font-size:11.5px; text-transform:uppercase; letter-spacing:.12em; color:#154273; font-weight:600; margin:0 0 2px;">Zoekhulp</p><h2>Onderzoek doen in het VOC-archief</h2></div>
+    <div><p style="font-size:11.5px; text-transform:uppercase; letter-spacing:.12em; color:#154273; font-weight:600; margin:0 0 2px;">Zoekhulpen</p><h2>Hulp bij uw onderzoek</h2></div>
     <button class="modal-close" id="zh-close" aria-label="Sluit zoekhulp"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
   </div>
-  <div class="side-panel-body">
-    <p style="font-size:14.5px; color:#39414e; line-height:1.6; padding:14px 16px; background:#eef3fa; border-radius:4px; border-left:4px solid #154273;"><strong>Welke personeelsgegevens zoek ik van VOC-scheepsopvarenden?</strong></p>
+  <!-- Zoek + filter binnen panel -->
+  <div style="padding: 14px 22px; border-bottom: 1px solid #e3dfd6; background: #f7f6f2;">
+    <div style="position:relative;">
+      <svg style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#5d6470;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="zh-search" type="search" placeholder="Zoek in zoekhulpen (bv. 'voorouder', 'schip')" style="width:100%; padding:9px 12px 9px 38px; border:1px solid #cfc9bc; border-radius:4px; font-size:14px; font-family:inherit;"/>
+    </div>
+    <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;" role="group" aria-label="Filter op categorie">
+      <button type="button" class="zh-cat-btn" data-cat="all" aria-pressed="true">Alle (12)</button>
+      <button type="button" class="zh-cat-btn" data-cat="koloniaal" aria-pressed="false">Koloniaal</button>
+      <button type="button" class="zh-cat-btn" data-cat="personen" aria-pressed="false">Personen</button>
+      <button type="body" class="zh-cat-btn" data-cat="oorlog" aria-pressed="false">Oorlog</button>
+      <button type="button" class="zh-cat-btn" data-cat="overig" aria-pressed="false">Overig</button>
+    </div>
+  </div>
+  <div class="side-panel-body" id="zh-body">
+    <!-- Lijst van alle zoekhulpen — filterbaar -->
+    <div id="zh-list">
+      <p style="font-size:13px; color:#5d6470; margin:0 0 14px;">Klik op een zoekhulp om uitleg en bronnen te zien. Alle zoekhulpen openen een gids voor stap-voor-stap onderzoek.</p>
 
-    <p style="font-size:14px; color:#39414e; line-height:1.6;">Voor onderzoek naar matrozen, soldaten, kooplieden en ambtenaren in dienst van de Compagnie volgt u onderstaande stappen. Uw onderzoek begint bij de online <strong>index VOC-opvarenden</strong> en gaat van daar verder de archieven in.</p>
+      <a class="zh-item" data-cat="koloniaal personen" data-zh="voc-opvarenden">
+        <strong>VOC-opvarenden</strong>
+        <small>Matrozen, soldaten, kooplieden en ambtenaren in dienst van de Compagnie. Begin in de online index.</small>
+        <span class="zh-tags">koloniaal · personen</span>
+      </a>
+      <a class="zh-item" data-cat="koloniaal personen">
+        <strong>VOC-testamenten 1698–1807</strong>
+        <small>Testamenten van VOC-dienaren in Azië, hun erfgenamen en boedel.</small>
+        <span class="zh-tags">koloniaal · personen</span>
+      </a>
+      <a class="zh-item" data-cat="koloniaal">
+        <strong>Generale Missiven van de Heren XVII</strong>
+        <small>Jaarverslagen van de Gouverneur-Generaal te Batavia aan de Heren XVII (1610–1795).</small>
+        <span class="zh-tags">koloniaal</span>
+      </a>
+      <a class="zh-item" data-cat="koloniaal">
+        <strong>Kaap de Goede Hoop 1652–1795</strong>
+        <small>Bestuursarchieven van de VOC-vestiging aan de Kaap.</small>
+        <span class="zh-tags">koloniaal</span>
+      </a>
+      <a class="zh-item" data-cat="personen">
+        <strong>Familiegeschiedenis</strong>
+        <small>Voorouders zoeken in doop-, trouw-, begraafregisters en bevolkingsregisters.</small>
+        <span class="zh-tags">personen</span>
+      </a>
+      <a class="zh-item" data-cat="personen">
+        <strong>Naturalisatieverzoeken</strong>
+        <small>Zoek voorouders die Nederlands staatsburger werden (1815–heden).</small>
+        <span class="zh-tags">personen</span>
+      </a>
+      <a class="zh-item" data-cat="oorlog personen">
+        <strong>CABR — Centraal Archief Bijzondere Rechtspleging</strong>
+        <small>300.000 dossiers over collaboratie en verzet 1940–1945.</small>
+        <span class="zh-tags">oorlog · personen</span>
+      </a>
+      <a class="zh-item" data-cat="oorlog">
+        <strong>Tweede Wereldoorlog in Nederlands-Indië</strong>
+        <small>Bersiap, Japanse bezetting, dekolonisatieoorlog 1942–1949.</small>
+        <span class="zh-tags">oorlog</span>
+      </a>
+      <a class="zh-item" data-cat="oorlog personen">
+        <strong>Militairen en Marinepersoneel</strong>
+        <small>Stamboeken, monsterrollen, KNIL en dienstplicht-archieven.</small>
+        <span class="zh-tags">oorlog · personen</span>
+      </a>
+      <a class="zh-item" data-cat="koloniaal">
+        <strong>Slavenregisters Suriname &amp; Curaçao</strong>
+        <small>Geregistreerde tot slaaf gemaakten 1830–1863, vrijverklaringen.</small>
+        <span class="zh-tags">koloniaal</span>
+      </a>
+      <a class="zh-item" data-cat="overig">
+        <strong>Adoptiedossiers</strong>
+        <small>Binnenlandse en internationale adopties via Nederlandse overheid.</small>
+        <span class="zh-tags">overig</span>
+      </a>
+      <a class="zh-item" data-cat="overig">
+        <strong>Notarieel archief</strong>
+        <small>Akten van notarissen 1531–heden: testamenten, koop, voogdij.</small>
+        <span class="zh-tags">overig</span>
+      </a>
+    </div>
+
+    <!-- Detail-zoekhulp (initieel verstopt) -->
+    <div id="zh-detail" hidden>
+      <button id="zh-back" type="button" style="background:none; border:0; color:#0f3360; cursor:pointer; font-size:13px; padding:0; margin-bottom:14px; display:inline-flex; align-items:center; gap:6px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        Terug naar alle zoekhulpen
+      </button>
+
+      <p style="font-size:14.5px; color:#39414e; line-height:1.6; padding:14px 16px; background:#eef3fa; border-radius:4px; border-left:4px solid #154273;"><strong>Welke personeelsgegevens zoek ik van VOC-scheepsopvarenden?</strong></p>
+
+      <p style="font-size:14px; color:#39414e; line-height:1.6;">Voor onderzoek naar matrozen, soldaten, kooplieden en ambtenaren in dienst van de Compagnie volgt u onderstaande stappen. Uw onderzoek begint bij de online <strong>index VOC-opvarenden</strong> en gaat van daar verder de archieven in.</p>
 
     <h3 style="font-size:16px; margin: 22px 0 8px;">Stap 1 · Index VOC-opvarenden raadplegen</h3>
     <p style="font-size:13.5px; color:#39414e; line-height:1.55; margin:0 0 8px;">Zoek in de online index op de naam van uw voorouder. U vindt:</p>
@@ -710,12 +811,13 @@
       <li><strong>Generale Missiven</strong> — jaarverslagen Gouverneur-Generaal aan Heren XVII</li>
     </ul>
 
-    <h3 style="font-size:16px; margin: 22px 0 8px;">Tips voor onderzoek in oude bronnen</h3>
-    <ul style="font-size:13.5px; color:#39414e; line-height:1.55; padding-left:18px; margin: 0;">
-      <li style="margin-bottom:6px;">Spelling van persoonsnamen varieert sterk in de 17e en 18e eeuw — probeer varianten als <em>Jansz., Janse, Jansen, Janssens</em>.</li>
-      <li style="margin-bottom:6px;">Veel scans zijn nog niet getranscribeerd — u leest het 17e-eeuwse handschrift zelf. Onze paleografie-cursus (online, gratis) helpt.</li>
-      <li>Begin breed (regio, periode, type stuk) en verfijn pas later op naam of detail.</li>
-    </ul>
+      <h3 style="font-size:16px; margin: 22px 0 8px;">Tips voor onderzoek in oude bronnen</h3>
+      <ul style="font-size:13.5px; color:#39414e; line-height:1.55; padding-left:18px; margin: 0;">
+        <li style="margin-bottom:6px;">Spelling van persoonsnamen varieert sterk in de 17e en 18e eeuw — probeer varianten als <em>Jansz., Janse, Jansen, Janssens</em>.</li>
+        <li style="margin-bottom:6px;">Veel scans zijn nog niet getranscribeerd — u leest het 17e-eeuwse handschrift zelf. Onze paleografie-cursus (online, gratis) helpt.</li>
+        <li>Begin breed (regio, periode, type stuk) en verfijn pas later op naam of detail.</li>
+      </ul>
+    </div>
   </div>
   <div class="side-panel-foot"><a href="zoekhulpen.html" class="btn-link lnk-arrow">Bekijk alle zoekhulpen</a></div>
 </aside>
@@ -793,6 +895,8 @@
   function showView(name, anchor){
     document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.dataset.view === name));
     history.replaceState(null, '', '?view=' + name + (anchor ? '#'+anchor : ''));
+    // Lazy-render andere bestanddeel-views op verzoek
+    if (/^bestanddeel-(B|C|D|E|F|II|III)$/.test(name)) renderOtherSection(name);
     setTimeout(() => {
       if (anchor && anchor !== 'top') {
         const el = document.getElementById(anchor);
@@ -800,6 +904,70 @@
       }
       window.scrollTo({top: document.querySelector('.archive-layout').offsetTop - 80, behavior: 'smooth'});
     }, 30);
+  }
+
+  function renderOtherSection(name){
+    const sec = document.querySelector(`.view[data-view="${name}"]`);
+    if (!sec || sec.dataset.rendered) return;
+    const [title, range, total, online] = sec.dataset.sectionInfo.split('|');
+    const [start, end] = range.split('-').map(Number);
+    // Genereer voorbeelddata: 30 items uit deze range
+    const SAMPLE = ['Resoluties van bewindhebbers','Stukken inzake equipage','Stukken inzake koopmanschappen','Lijsten van uitvarende schepen','Brieven aan de Heren XVII','Notulen van de kamer','Boekhouding van de kamer','Stukken inzake bemanning','Verzameling charters','Aanvullende stukken'];
+    const sampleRows = [];
+    for (let i = 0; i < 30; i++){
+      const n = start + Math.round((end-start) * i / 29);
+      const status = i % 7 === 0 ? 'phys' : (i === 5 ? 'restr' : 'digi');
+      sampleRows.push({n, title: SAMPLE[i % SAMPLE.length] + (i % 3 === 0 ? ' (vervolg)' : ''), date: (1602 + (i*6) % 193) + ((i % 4) ? `–${1602 + (i*6+12) % 193}` : ''), status, form: 'Manuscript'});
+    }
+    const STATUS = { digi:{label:'Online',dot:'#16a34a',cls:'status-online'}, phys:{label:'Fysiek',dot:'#d97706',cls:'status-offline'}, restr:{label:'Beperkt',dot:'#dc2626',cls:'status-restr'} };
+
+    const rowsHtml = sampleRows.map(d => {
+      const st = STATUS[d.status];
+      return `<button type="button" class="grid-row row-other" data-n="${d.n}" data-status="${d.status}" style="font-family:inherit; border-bottom:1px solid #efece5; cursor:pointer; text-align:left; width:100%; background:#fff; padding:12px 16px; display:grid; grid-template-columns:60px 1fr 140px 130px; gap:16px; align-items:center; border-left:3px solid transparent;">
+        <span class="num" style="font-size:13.5px; color:#5d6470;">${d.n}</span>
+        <span style="font-size:14.5px; color:#0e1b2c; line-height:1.4;">${d.title}</span>
+        <span class="num" style="font-size:13.5px; color:#5d6470;">${d.date}</span>
+        <span style="text-align:right; font-size:13.5px; font-weight:500;" class="${st.cls}"><span class="dot" style="background:${st.dot}; vertical-align:middle; margin-right:6px;"></span>${st.label}</span>
+      </button>`;
+    }).join('');
+
+    sec.innerHTML = `
+      <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:6px; flex-wrap:wrap;">
+        <p class="kicker" style="font-size:11.5px; text-transform:uppercase; letter-spacing:.12em; color:#154273; font-weight:600; margin:0;">${name.startsWith('bestanddeel-')?'Deel '+(name.includes('II')||name.includes('III')?'':'I')+' · Bestanddeel ' + name.replace('bestanddeel-','') : ''}</p>
+        <p style="font-size:13px; color:#5d6470; margin:0;">${total} stukken · inv.nrs ${range}</p>
+      </div>
+      <h2 style="margin:0 0 8px;">${title}</h2>
+      <p style="font-size:14.5px; color:#5d6470; margin:0 0 24px; max-width:760px;">${total} inventarisnummers, waarvan <strong style="color:#15803d;">${online} online beschikbaar</strong>. Onderstaand een selectie van 30 stukken uit deze sectie — de volledige lijst is via de zoekbalk te doorzoeken.</p>
+
+      <div style="background:#eef3fa; border:1px solid #dbe5f2; border-radius:4px; padding:12px 16px; margin-bottom:14px; font-size:13.5px; color:#0f3360;">
+        <strong>Demo-weergave</strong> — ${total} echte inv.nrs zijn beschikbaar in dit bestanddeel. Hieronder tonen we een steekproef.
+      </div>
+
+      <div style="border:1px solid #e3dfd6; border-radius:4px; overflow:hidden; background:#fff;">
+        <div class="grid-row row-header" role="row" aria-hidden="true" style="background:#f7f6f2; border-bottom:1px solid #e3dfd6;">
+          <span>Nummer</span><span>Beschrijving</span><span>Datering</span><span style="text-align:right;">Status</span>
+        </div>
+        <div class="listy" style="max-height:60vh;">${rowsHtml}</div>
+        <div class="list-foot">
+          <span>30 van ${total} stukken (steekproef)</span>
+          <a href="#" class="lnk">Toon alle ${total} nummers in deze sectie</a>
+        </div>
+      </div>
+    `;
+
+    sec.querySelectorAll('.row-other').forEach(r => {
+      r.addEventListener('click', () => {
+        const n = +r.dataset.n;
+        if (r.dataset.status === 'digi') {
+          window.open(`viewer.html?n=${n}`, '_blank', 'noopener');
+        } else {
+          // Toon compacte info-modal voor placeholder items
+          alert(`Inv.nr ${n} (demo) — in een echte implementatie zou hier de detail-modal openen met metadata, citatie en reserveer-knop.`);
+        }
+      });
+    });
+
+    sec.dataset.rendered = '1';
   }
 
   function setActiveNavButton(view, anchor){
@@ -971,21 +1139,21 @@
     const isOnline = d.status === 'digi';
     const sectionLabel = d.section==='octrooien' ? 'Octrooien (1–22)' : 'Resoluties Heren XVII (23–96)';
 
-    const bcN = document.getElementById('md-n-bc'); if (bcN) bcN.textContent = `inv.nr ${d.n}`;
-    const bcD = document.getElementById('md-date-bc'); if (bcD && d.date) bcD.textContent = `· ${d.date}`;
-    document.getElementById('md-section').textContent = sectionLabel;
-    document.getElementById('md-title').textContent = d.title;
-    document.getElementById('md-note').textContent = d.note || '';
-    document.getElementById('md-context').textContent = d.context || 'Onderdeel van de inventaris van het VOC-archief.';
+    const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+    setText('md-n-bc', `inv.nr ${d.n}`);
+    setText('md-date-bc', d.date ? `· ${d.date}` : '');
+    setText('md-section', sectionLabel);
+    setText('md-title', d.title);
+    setText('md-context', d.note || d.context || 'Onderdeel van de inventaris van het VOC-archief.');
+    setText('md-m-rubriek', sectionLabel);
+    setText('md-m-form', d.form || '—');
+    setText('md-m-urn', `urn:nl:nationaalarchief:1.04.02:${d.n}`);
 
     const badge = document.getElementById('md-status-badge');
-    badge.className = `status-badge ${st.badge}`;
-    badge.innerHTML = `<span class="dot" style="background:${st.dot}"></span>${st.full}`;
-
-    // (md-m-n + md-m-date verplaatst naar header — niet meer in metadata-list)
-    document.getElementById('md-m-rubriek').textContent = sectionLabel;
-    document.getElementById('md-m-form').textContent = d.form || '—';
-    document.getElementById('md-m-urn').textContent = `urn:nl:nationaalarchief:1.04.02:${d.n}`;
+    if (badge) {
+      badge.className = `status-badge ${st.badge}`;
+      badge.innerHTML = `<span class="dot" style="background:${st.dot}"></span>${st.full}`;
+    }
 
     const pz = document.getElementById('md-preview');
     if (isOnline){
@@ -1073,9 +1241,49 @@
     document.body.style.overflow = '';
   }
   // Wire ALL buttons that should open the zoekhulp side panel
-  document.querySelectorAll('#open-zoekhulp, [data-open-zoekhulp]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openZh(); }));
+  document.querySelectorAll('#open-zoekhulp, [data-open-zoekhulp]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openZh(); showZhList(); }));
   document.getElementById('zh-close')?.addEventListener('click', closeZh);
   zhBackdrop?.addEventListener('click', closeZh);
+
+  // Zoekhulp hub: lijst ↔ detail
+  const zhList = document.getElementById('zh-list');
+  const zhDetail = document.getElementById('zh-detail');
+  const zhSearch = document.getElementById('zh-search');
+  function showZhList(){ if(zhList) zhList.hidden=false; if(zhDetail) zhDetail.hidden=true; if(zhSearch){ zhSearch.value=''; filterZh(''); } }
+  function showZhDetail(){ if(zhList) zhList.hidden=true; if(zhDetail) zhDetail.hidden=false; }
+  document.getElementById('zh-back')?.addEventListener('click', showZhList);
+  document.querySelectorAll('.zh-item').forEach(item => {
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      // alleen voc-opvarenden heeft echte detail-content; rest toon placeholder
+      if (item.dataset.zh === 'voc-opvarenden') {
+        showZhDetail();
+      } else {
+        showZhDetail();
+        // hier zou je per item ander detail laden; nu tonen we VOC-opvarenden als demo
+      }
+    });
+  });
+  let zhCat = 'all';
+  function filterZh(q){
+    q = (q||'').toLowerCase();
+    document.querySelectorAll('.zh-item').forEach(item => {
+      const cats = (item.dataset.cat||'').toLowerCase();
+      const text = item.textContent.toLowerCase();
+      const matchCat = zhCat === 'all' || cats.includes(zhCat);
+      const matchQ = !q || text.includes(q);
+      item.classList.toggle('hidden', !(matchCat && matchQ));
+    });
+  }
+  zhSearch?.addEventListener('input', e => filterZh(e.target.value));
+  document.querySelectorAll('.zh-cat-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.zh-cat-btn').forEach(x => x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true');
+      zhCat = b.dataset.cat;
+      filterZh(zhSearch?.value||'');
+    });
+  });
 
   // ===== Popovers: sluit andere wanneer er een opent =====
   document.querySelectorAll('details.filter-popover').forEach(d => {

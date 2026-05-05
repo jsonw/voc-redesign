@@ -101,21 +101,53 @@
   .filters-toggle svg { transition: transform .2s; }
   .filters-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
 
-  /* Filter accordions */
-  .filter-panel { margin-bottom: 16px; }
-  .filter-panel[hidden] { display: none; }
-  .filter-acc { border: 1px solid #e3dfd6; border-radius: 4px; margin-bottom: 8px; background: #fff; overflow: hidden; }
-  .filter-acc summary { padding: 12px 16px; font-size: 14px; font-weight: 600; color: #0e1b2c; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #f7f6f2; }
-  .filter-acc summary:hover { background: #eef3fa; }
-  .filter-acc summary svg { transition: transform .15s; }
-  .filter-acc[open] summary svg { transform: rotate(180deg); }
-  .filter-acc-body { padding: 8px 16px 14px; }
-  .filter-acc label { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 14px; color: #39414e; cursor: pointer; }
-  .filter-acc label:hover { color: #0f3360; }
-  .filter-acc label .lbl-text { display: flex; align-items: center; gap: 8px; }
-  .filter-acc label input[type=checkbox] { accent-color: #154273; width: 16px; height: 16px; }
-  .filter-acc label .count { font-size: 12.5px; color: #7e8492; font-variant-numeric: tabular-nums; }
-  .filter-acc input[type=number] { width: 90px; padding: 6px 8px; border: 1px solid #cfc9bc; border-radius: 4px; font-size: 13px; font-variant-numeric: tabular-nums; }
+  /* Compacte filter-rij */
+  .filter-row {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    padding: 12px 14px; background: #f7f6f2; border: 1px solid #e3dfd6; border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .filter-row-label { font-size: 13px; color: #5d6470; font-weight: 500; }
+  .filter-popover { position: relative; }
+  .filter-popover summary { list-style: none; }
+  .filter-popover summary::-webkit-details-marker { display: none; }
+  .filter-popover[open] summary { background: #eef3fa; border-color: #154273; color: #0f3360; }
+  .filter-popover .pop { min-width: 240px; }
+  .filter-popover .pop .pop-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 14px; color: #39414e; cursor: pointer; }
+  .filter-popover .pop .pop-row:hover { color: #0f3360; }
+  .filter-popover .pop .pop-row span:first-child { display: flex; align-items: center; gap: 8px; }
+  .filter-popover .pop .pop-row input[type=checkbox] { accent-color: #154273; }
+  .filter-popover .pop .count { font-size: 12.5px; color: #7e8492; font-variant-numeric: tabular-nums; }
+
+  /* Beschikbaarheidswidget */
+  .availability {
+    background: #fff; border: 1px solid #e3dfd6; border-radius: 6px;
+    padding: 22px 24px;
+  }
+  .avail-bar {
+    display: flex; height: 28px; border-radius: 4px; overflow: hidden; margin-bottom: 18px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.04);
+  }
+  .avail-seg { transition: opacity .15s; cursor: help; min-width: 4px; }
+  .avail-seg:hover { opacity: .85; }
+  .avail-legend {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    border-bottom: 1px solid #e3dfd6; padding-bottom: 18px; margin-bottom: 18px;
+  }
+  .avail-row-head { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #0e1b2c; }
+  .avail-row-num { font-family: 'Fraunces', serif; font-size: 22px; color: #0e1b2c; margin: 4px 0; }
+  .avail-row-num span { font-size: 13px; color: #5d6470; font-family: 'Inter', sans-serif; margin-left: 4px; }
+  .avail-row-desc { font-size: 13px; color: #5d6470; line-height: 1.5; }
+  .avail-types .avail-type-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 24px;
+  }
+  .avail-types .avail-type-grid > div { display: flex; flex-direction: column; gap: 2px; }
+  .avail-types .avail-type-grid strong { font-family: 'Fraunces', serif; font-size: 18px; color: #0e1b2c; font-weight: 500; }
+  .avail-types .avail-type-grid span { font-size: 12.5px; color: #5d6470; }
+  @media (max-width: 768px) {
+    .avail-legend { grid-template-columns: 1fr; }
+    .avail-types .avail-type-grid { grid-template-columns: 1fr 1fr; }
+  }
 
   /* Section header in list — strong contrast NA-blue */
   /* (already in shared.css, just reinforced here) */
@@ -218,13 +250,13 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
         </div>
         <div class="arch-nav-list">
-          <button data-view="archief" class="active">Archief</button>
-          <button data-view="beschrijving">Beschrijving van het archief</button>
-          <button data-view="archiefvorming">Archiefvorming</button>
-          <button data-view="inhoud">Inhoud en structuur</button>
-          <button data-view="aanwijzingen">Aanwijzingen voor de gebruiker</button>
-          <button data-view="verwant">Verwant materiaal</button>
-          <button data-view="bijlagen">Bijlagen</button>
+          <button data-view="archief" data-anchor="top" class="active">Archief — overzicht</button>
+          <button data-view="archief" data-anchor="beschrijving">Beschrijving van het archief</button>
+          <button data-view="archief" data-anchor="archiefvorming">Archiefvorming</button>
+          <button data-view="archief" data-anchor="inhoud">Inhoud en structuur</button>
+          <button data-view="archief" data-anchor="aanwijzingen">Aanwijzingen voor de gebruiker</button>
+          <button data-view="archief" data-anchor="verwant">Verwant materiaal</button>
+          <button data-view="archief" data-anchor="bijlagen">Bijlagen</button>
         </div>
       </div>
 
@@ -291,17 +323,62 @@
     <!-- =============== HOOFDINHOUD VIEWS =============== -->
     <div>
 
-      <!-- VIEW: Archief (default) -->
+      <!-- VIEW: Archief — gecombineerde archiefbeschrijving met anchor-secties -->
       <section class="view active" data-view="archief">
-        <h2>Archief</h2>
-        <p>Welkom bij de inventaris van het VOC-archief. Dit is een van de meest geraadpleegde archieven van het Nationaal Archief. Het bevat ruim 17.000 inventarisnummers over twee eeuwen wereldhandel, bestuur, scheepvaart en mensen die in dienst waren van de Compagnie.</p>
-        <p>Gebruik het menu links om te navigeren tussen onderdelen van de archiefbeschrijving en archiefbestanddelen, of begin direct met zoeken in de inventaris.</p>
-        <div style="display:flex; gap:12px; flex-wrap:wrap; margin: 20px 0 32px;">
-          <button class="btn-primary" data-jump="bestanddeel-A">Doorzoek inventaris</button>
-          <button class="btn-secondary" data-jump="archiefvorming">Lees over de VOC</button>
+
+        <!-- Top intro -->
+        <div id="top">
+          <h2>Archief</h2>
+          <p>Welkom bij de inventaris van het VOC-archief. Eén van de meest geraadpleegde archieven van het Nationaal Archief — ruim 17.000 inventarisnummers over twee eeuwen wereldhandel, bestuur, scheepvaart en mensen in dienst van de Compagnie.</p>
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin: 18px 0 28px;">
+            <button class="btn-primary" data-jump="bestanddeel-A">Doorzoek inventaris</button>
+            <button class="btn-secondary" data-anchor="archiefvorming" data-anchor-btn>Lees over de VOC</button>
+          </div>
         </div>
 
-        <div class="view-meta">
+        <!-- Beschikbaarheidswidget -->
+        <div class="availability">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+            <h3 style="margin:0; font-size:18px;">Beschikbaarheid van het archief</h3>
+            <span style="font-size:12.5px; color:#5d6470;">17.297 inventarisnummers</span>
+          </div>
+          <div class="avail-bar" role="img" aria-label="Beschikbaarheidsverdeling: 57% online, 40% fysiek, 3% beperkt">
+            <div class="avail-seg" style="background:#16a34a; width:57%;" title="9.812 online"></div>
+            <div class="avail-seg" style="background:#d97706; width:40%;" title="6.985 fysiek"></div>
+            <div class="avail-seg" style="background:#dc2626; width:3%;" title="500 beperkt"></div>
+          </div>
+          <div class="avail-legend">
+            <div class="avail-row">
+              <div class="avail-row-head"><span class="dot" style="background:#16a34a"></span> <strong>Online beschikbaar</strong></div>
+              <div class="avail-row-num"><strong class="num">9.812</strong> <span class="num">(57%)</span></div>
+              <div class="avail-row-desc">Gedigitaliseerd. Direct te bekijken in de scan-viewer.</div>
+            </div>
+            <div class="avail-row">
+              <div class="avail-row-head"><span class="dot" style="background:#d97706"></span> <strong>Alleen fysiek</strong></div>
+              <div class="avail-row-num"><strong class="num">6.985</strong> <span class="num">(40%)</span></div>
+              <div class="avail-row-desc">Niet gedigitaliseerd. Op afspraak inzien in de studiezaal.</div>
+            </div>
+            <div class="avail-row">
+              <div class="avail-row-head"><span class="dot" style="background:#dc2626"></span> <strong>Beperkt raadpleegbaar</strong></div>
+              <div class="avail-row-num"><strong class="num">500</strong> <span class="num">(3%)</span></div>
+              <div class="avail-row-desc">Fragiele staat. Alleen op verzoek; digitalisering aanvragen.</div>
+            </div>
+          </div>
+          <div class="avail-types">
+            <p style="font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:#5d6470; margin:0 0 10px; font-weight:600;">Verdeling naar soort materiaal</p>
+            <div class="avail-type-grid">
+              <div><strong class="num">9.842</strong><span>Manuscripten</span></div>
+              <div><strong class="num">5.103</strong><span>Resoluties &amp; minuten</span></div>
+              <div><strong class="num">1.842</strong><span>Brieven &amp; missiven</span></div>
+              <div><strong class="num">312</strong><span>Charters (perkament)</span></div>
+              <div><strong class="num">189</strong><span>Gedrukte stukken</span></div>
+              <div><strong class="num">9</strong><span>Plakkaten</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kerngegevens -->
+        <div class="view-meta" style="margin-top:24px;">
           <p style="font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:#5d6470; margin:0 0 10px; font-weight:600;">Kerngegevens</p>
           <dl class="spec">
             <div><dt>Toegangsnummer</dt><dd class="num">1.04.02</dd></div>
@@ -314,33 +391,24 @@
             <div><dt>Openbaarheid</dt><dd>Volledig openbaar; enkele stukken beperkt raadpleegbaar</dd></div>
           </dl>
         </div>
-      </section>
 
-      <!-- VIEW: Beschrijving van het archief -->
-      <section class="view" data-view="beschrijving">
-        <h2>Beschrijving van het archief</h2>
+        <!-- Anchor sections -->
+        <h2 id="beschrijving" style="margin-top: 56px;">Beschrijving van het archief</h2>
         <p>Bevat archieven van de Heren XVII en de kamer Amsterdam (onderling sterk vermengd), de kamers Zeeland, Delft, Rotterdam, Hoorn en Enkhuizen. Het materiaal omvat resoluties, verbalen van het Haags Besogne, brieven naar en overgekomen stukken uit de koloniën — voor de periode na 1700 met afzonderlijke series voor de Kaap en China — boekhouding en personeelsadministratie.</p>
         <p>Voor de periode na 1700 zijn afzonderlijke series gevormd voor de Kaap en China. Boekhouding en personeelsadministratie zijn vooral voor de 18e eeuw vrij volledig bewaard.</p>
 
-        <h3>Citatie</h3>
+        <h3 style="margin-top:24px;">Citatie</h3>
         <p style="font-family: ui-monospace, monospace; font-size:13.5px; padding:14px; background:#f7f6f2; border-radius:4px; line-height:1.55;">Nationaal Archief, Den Haag, Verenigde Oost-Indische Compagnie (VOC), 1602–1811, nummer toegang 1.04.02.</p>
-      </section>
 
-      <!-- VIEW: Archiefvorming -->
-      <section class="view" data-view="archiefvorming">
-        <h2>Archiefvorming</h2>
+        <h2 id="archiefvorming" style="margin-top: 56px;">Archiefvorming</h2>
         <h3>Geschiedenis van de archiefvormer</h3>
         <p>De Verenigde Oost-Indische Compagnie werd op 20 maart 1602 opgericht door de Staten-Generaal als handelsmonopolie voor het gebied ten oosten van Kaap de Goede Hoop en ten westen van de Straat Magellaan. De Compagnie ontwikkelde zich tot 's werelds eerste multinationale onderneming, met soevereine bevoegdheden: oorlog voeren, verdragen sluiten, munt slaan en rechtspreken.</p>
         <p>Het bestuur in de Republiek lag bij de Heren XVII (de centrale vergadering van bewindhebbers) en de zes kamers: Amsterdam, Zeeland (Middelburg), Delft, Rotterdam, Hoorn en Enkhuizen. In Azië voerde de Hoge Regering te Batavia het bestuur over alle vestigingen.</p>
         <p>In 1795 werd de Compagnie genationaliseerd na het uitroepen van de Bataafse Republiek; haar bezittingen en archief gingen over op de Bataafse Republiek en later op het Koninkrijk der Nederlanden.</p>
-
         <h3>Geschiedenis van het archiefbeheer</h3>
         <p>Het archief werd na de opheffing van de Compagnie aanvankelijk bewaard door het Comité tot de zaken van de Oost-Indische Handel en Bezittingen, en kwam later onder het Ministerie van Koloniën. Sinds 1856 maakt het deel uit van het Algemeen Rijksarchief, voorganger van het Nationaal Archief.</p>
-      </section>
 
-      <!-- VIEW: Inhoud en structuur -->
-      <section class="view" data-view="inhoud">
-        <h2>Inhoud en structuur van het archief</h2>
+        <h2 id="inhoud" style="margin-top: 56px;">Inhoud en structuur</h2>
         <h3>Hoofdindeling</h3>
         <p>Het archief is opgedeeld in drie delen:</p>
         <ul>
@@ -348,14 +416,10 @@
           <li><strong>Deel II — Overgekomen brieven en papieren uit Azië</strong> (inv.nrs 11.444–14.799): correspondentie van de Hoge Regering te Batavia en de buitencomptoiren naar de Republiek.</li>
           <li><strong>Deel III — Kaap, China en aanverwante series</strong> (inv.nrs 14.800–17.297): afzonderlijk gevormde series voor specifieke regio's en onderwerpen.</li>
         </ul>
-
         <h3>Hiaten in het archief</h3>
         <p>De briefwisseling binnen Europa, scheepsjournalen, financiële stukken vóór 1700 en archieven van de Amsterdamse departementen zijn geheel of voor een groot gedeelte verloren gegaan. Aanvullend materiaal voor onderzoek naar de Aziatische handel en het bestuur in Batavia bevindt zich in het <a class="lnk" href="#">Arsip Nasional Republik Indonesia</a> in Jakarta.</p>
-      </section>
 
-      <!-- VIEW: Aanwijzingen voor de gebruiker -->
-      <section class="view" data-view="aanwijzingen">
-        <h2>Aanwijzingen voor de gebruiker</h2>
+        <h2 id="aanwijzingen" style="margin-top: 56px;">Aanwijzingen voor de gebruiker</h2>
         <h3>Voorwaarden voor raadpleging</h3>
         <p>Het archief is volledig openbaar. Een klein aantal stukken is wegens de fragiele fysieke staat beperkt raadpleegbaar; deze kunnen op verzoek worden gedigitaliseerd.</p>
         <h3>Aanvraag</h3>
@@ -364,11 +428,8 @@
         <p>De inventarisbeschrijvingen zijn vrij van auteursrecht en beschikbaar als open data (CC0). Op de scans van de archiefstukken rust geen auteursrecht meer; u mag deze vrij gebruiken voor onderzoek, publicaties en onderwijs.</p>
         <h3>Toelichting bij oudere terminologie</h3>
         <p style="padding:14px; background:#fdebd0; border-radius:4px;">In de inventaris en de stukken zelf komt taalgebruik voor dat vandaag de dag als kwetsend of beledigend wordt ervaren. Het Nationaal Archief bewaart deze termen in hun historische context; ze weerspiegelen niet onze hedendaagse waarden.</p>
-      </section>
 
-      <!-- VIEW: Verwant materiaal -->
-      <section class="view" data-view="verwant">
-        <h2>Verwant materiaal</h2>
+        <h2 id="verwant" style="margin-top: 56px;">Verwant materiaal</h2>
         <h3>Aanvullende collecties in andere instellingen</h3>
         <ul>
           <li><a class="lnk" href="#">Arsip Nasional Republik Indonesia</a>, Jakarta — bestuursarchieven van Batavia</li>
@@ -386,16 +447,14 @@
           <li>Femme S. Gaastra, <em>Geschiedenis van de VOC</em> (Walburg Pers, 2002).</li>
           <li>M.A.P. Meilink-Roelofsz e.a., <em>De archieven van de Verenigde Oost-Indische Compagnie 1602–1795</em> (SDU, 1992).</li>
         </ul>
-      </section>
 
-      <!-- VIEW: Bijlagen -->
-      <section class="view" data-view="bijlagen">
-        <h2>Bijlagen</h2>
+        <h2 id="bijlagen" style="margin-top: 56px;">Bijlagen</h2>
         <ul>
           <li><a class="lnk" href="#">Concordans inventarisnummers oud–nieuw (PDF, 240 kB)</a></li>
           <li><a class="lnk" href="#">Lijst van afkortingen in de inventaris (PDF, 80 kB)</a></li>
           <li><a class="lnk" href="#">Glossarium 17e/18e-eeuwse VOC-terminologie (PDF, 320 kB)</a></li>
         </ul>
+
       </section>
 
       <!-- VIEW: Inventaris (Deel I/A — default actief in tree) -->
@@ -427,58 +486,62 @@
           </div>
         </div>
 
-        <!-- FILTERS: collapse toggle -->
-        <button class="filters-toggle" id="filters-toggle" aria-expanded="true" aria-controls="filter-panel" type="button" style="margin-bottom: 12px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
-          Filters verbergen
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
-        </button>
+        <!-- COMPACTE HORIZONTALE FILTER-RIJ -->
+        <div class="filter-row">
+          <span class="filter-row-label">Toon:</span>
+          <label class="checkbox-pill">
+            <input type="checkbox" data-filter="digi-yes"/>
+            <span class="dot" style="background:#16a34a"></span>
+            Online <span class="count" id="cnt-digi-yes">—</span>
+          </label>
+          <label class="checkbox-pill">
+            <input type="checkbox" data-filter="phys-only"/>
+            <span class="dot" style="background:#d97706"></span>
+            Fysiek <span class="count" id="cnt-phys">—</span>
+          </label>
+          <label class="checkbox-pill">
+            <input type="checkbox" data-filter="restr-yes"/>
+            <span class="dot" style="background:#dc2626"></span>
+            Beperkt <span class="count" id="cnt-restr-yes">—</span>
+          </label>
 
-        <div class="filter-panel" id="filter-panel">
-          <details class="filter-acc" open>
-            <summary>Bevat digitaal materiaal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></summary>
-            <div class="filter-acc-body">
-              <label><span class="lbl-text"><input type="checkbox" data-filter="digi-yes"/><span class="dot" style="background:#16a34a"></span> Ja</span><span class="count" id="cnt-digi-yes">—</span></label>
-              <label><span class="lbl-text"><input type="checkbox" data-filter="digi-no"/><span class="dot" style="background:#cfc9bc"></span> Nee</span><span class="count" id="cnt-digi-no">—</span></label>
+          <details class="filter-popover">
+            <summary class="checkbox-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+              Soort materiaal
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="pop">
+              <label class="pop-row"><span><input type="checkbox" data-form="charter"/> Charter</span><span class="count">18</span></label>
+              <label class="pop-row"><span><input type="checkbox" data-form="gedrukt"/> Gedrukt stuk</span><span class="count">14</span></label>
+              <label class="pop-row"><span><input type="checkbox" data-form="manuscript"/> Manuscript</span><span class="count">62</span></label>
+              <label class="pop-row"><span><input type="checkbox" data-form="plakkaat"/> Plakkaat</span><span class="count">2</span></label>
             </div>
           </details>
 
-          <details class="filter-acc">
-            <summary>Beperkt openbaar <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></summary>
-            <div class="filter-acc-body">
-              <label><span class="lbl-text"><input type="checkbox" data-filter="restr-yes"/><span class="dot" style="background:#dc2626"></span> Ja</span><span class="count" id="cnt-restr-yes">—</span></label>
-              <label><span class="lbl-text"><input type="checkbox" data-filter="restr-no"/><span class="dot" style="background:#cfc9bc"></span> Nee</span><span class="count" id="cnt-restr-no">—</span></label>
-            </div>
-          </details>
-
-          <details class="filter-acc">
-            <summary>Soort materiaal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></summary>
-            <div class="filter-acc-body">
-              <label><span class="lbl-text"><input type="checkbox" data-form="charter"/> Charter</span><span class="count">18</span></label>
-              <label><span class="lbl-text"><input type="checkbox" data-form="gedrukt"/> Gedrukt stuk</span><span class="count">14</span></label>
-              <label><span class="lbl-text"><input type="checkbox" data-form="manuscript"/> Manuscript</span><span class="count">62</span></label>
-              <label><span class="lbl-text"><input type="checkbox" data-form="plakkaat"/> Plakkaat</span><span class="count">2</span></label>
-            </div>
-          </details>
-
-          <details class="filter-acc">
-            <summary>Bestandstype <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></summary>
-            <div class="filter-acc-body">
-              <label><span class="lbl-text"><input type="checkbox"/> JPEG</span><span class="count">84</span></label>
-              <label><span class="lbl-text"><input type="checkbox"/> PDF</span><span class="count">23</span></label>
-            </div>
-          </details>
-
-          <details class="filter-acc">
-            <summary>Periode <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></summary>
-            <div class="filter-acc-body">
-              <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                <label style="font-size:13px;">Vanaf <input id="yr-from" type="number" min="1602" max="1795" value="1602" class="num"/></label>
-                <label style="font-size:13px;">Tot en met <input id="yr-to" type="number" min="1602" max="1795" value="1795" class="num"/></label>
-                <button id="yr-apply" type="button" class="btn-secondary" style="height:34px; padding:0 14px; font-size:13.5px;">Toepassen</button>
+          <details class="filter-popover">
+            <summary class="checkbox-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              <span id="period-label">Periode</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="pop">
+              <p style="font-size:12.5px; color:#5d6470; margin:0 0 10px;">Vul jaartallen in (1602–1795).</p>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <label style="font-size:12.5px;"><span style="display:block; margin-bottom:4px;">Vanaf</span><input id="yr-from" type="number" min="1602" max="1795" value="1602" class="num" style="width:100%; padding:6px 8px; border:1px solid #cfc9bc; border-radius:4px;"/></label>
+                <label style="font-size:12.5px;"><span style="display:block; margin-bottom:4px;">Tot</span><input id="yr-to" type="number" min="1602" max="1795" value="1795" class="num" style="width:100%; padding:6px 8px; border:1px solid #cfc9bc; border-radius:4px;"/></label>
               </div>
+              <button id="yr-apply" type="button" style="margin-top:10px; width:100%; height:34px; background:#154273; color:#fff; border:0; border-radius:4px; font-size:13.5px; cursor:pointer;">Toepassen</button>
             </div>
           </details>
+
+          <div style="margin-left:auto; display:flex; align-items:center; gap:10px;">
+            <label for="sort" style="font-size:13px; color:#5d6470;">Sorteer:</label>
+            <select id="sort" style="font-size:13.5px; border:1px solid #cfc9bc; border-radius:4px; padding:6px 10px; background:#fff;">
+              <option value="nr">Nummer</option>
+              <option value="year">Jaartal</option>
+            </select>
+          </div>
         </div>
 
         <!-- Active filter pills -->
@@ -663,12 +726,12 @@
   // Tellers
   const counts = { digi:0, phys:0, restr:0 };
   data.forEach(d => counts[d.status]++);
-  const cdy = document.getElementById('cnt-digi-yes'), cdn = document.getElementById('cnt-digi-no'),
-        cry = document.getElementById('cnt-restr-yes'), crn = document.getElementById('cnt-restr-no');
+  const cdy = document.getElementById('cnt-digi-yes'),
+        cph = document.getElementById('cnt-phys'),
+        cry = document.getElementById('cnt-restr-yes');
   if (cdy) cdy.textContent = counts.digi;
-  if (cdn) cdn.textContent = counts.phys + counts.restr;
+  if (cph) cph.textContent = counts.phys;
   if (cry) cry.textContent = counts.restr;
-  if (crn) crn.textContent = data.length - counts.restr;
 
   const STATUS = {
     digi:  { label:'Online', full:'Online beschikbaar', dot:'#16a34a', cls:'status-online', badge:'online' },
@@ -677,18 +740,37 @@
   };
 
   // ==== VIEW ROUTING ====
-  function showView(name){
+  function showView(name, anchor){
     document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.dataset.view === name));
-    document.querySelectorAll('.arch-nav-list button[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === name));
-    history.replaceState(null, '', '?view=' + name);
-    window.scrollTo({top: document.querySelector('.archive-layout').offsetTop - 80, behavior: 'smooth'});
+    history.replaceState(null, '', '?view=' + name + (anchor ? '#'+anchor : ''));
+    setTimeout(() => {
+      if (anchor && anchor !== 'top') {
+        const el = document.getElementById(anchor);
+        if (el) { el.scrollIntoView({behavior:'smooth', block:'start'}); return; }
+      }
+      window.scrollTo({top: document.querySelector('.archive-layout').offsetTop - 80, behavior: 'smooth'});
+    }, 30);
+  }
+
+  function setActiveNavButton(view, anchor){
+    document.querySelectorAll('.arch-nav-list button[data-view]').forEach(b => {
+      const matches = b.dataset.view === view && (anchor ? b.dataset.anchor === anchor : !b.dataset.anchor || b.dataset.anchor === 'top');
+      b.classList.toggle('active', matches);
+    });
   }
 
   document.querySelectorAll('.arch-nav-list button[data-view]').forEach(b => {
-    b.addEventListener('click', e => { e.preventDefault(); showView(b.dataset.view); });
+    b.addEventListener('click', e => {
+      e.preventDefault();
+      showView(b.dataset.view, b.dataset.anchor);
+      setActiveNavButton(b.dataset.view, b.dataset.anchor);
+    });
   });
   document.querySelectorAll('[data-jump]').forEach(b => {
-    b.addEventListener('click', e => { e.preventDefault(); showView(b.dataset.jump); });
+    b.addEventListener('click', e => { e.preventDefault(); showView(b.dataset.jump); setActiveNavButton(b.dataset.jump); });
+  });
+  document.querySelectorAll('[data-anchor-btn]').forEach(b => {
+    b.addEventListener('click', e => { e.preventDefault(); showView('archief', b.dataset.anchor); setActiveNavButton('archief', b.dataset.anchor); });
   });
 
   // Group toggles
@@ -717,13 +799,15 @@
   const chipsEl = document.getElementById('chips');
   const resetBtn = document.getElementById('reset-filters');
 
-  let state = { q:'', sort:'nr', filters:{ digiYes:false, digiNo:false, restrYes:false, restrNo:false }, forms:new Set(), yearMin:1602, yearMax:1795, currentN:null };
+  let state = { q:'', sort:'nr', filters:{ digiYes:false, physOnly:false, restrYes:false }, forms:new Set(), yearMin:1602, yearMax:1795, currentN:null };
 
   function pass(d){
-    if (state.filters.digiYes && d.status !== 'digi') return false;
-    if (state.filters.digiNo && d.status === 'digi') return false;
-    if (state.filters.restrYes && d.status !== 'restr') return false;
-    if (state.filters.restrNo && d.status === 'restr') return false;
+    // Multiple status filters work as OR (any selected status matches)
+    const statusFilters = [];
+    if (state.filters.digiYes) statusFilters.push('digi');
+    if (state.filters.physOnly) statusFilters.push('phys');
+    if (state.filters.restrYes) statusFilters.push('restr');
+    if (statusFilters.length && !statusFilters.includes(d.status)) return false;
     if (state.forms.size){
       const formMap = { charter: /charter/i, gedrukt: /gedrukt/i, manuscript: /manuscript/i, plakkaat: /plakkaat/i };
       let match = false;
@@ -768,10 +852,9 @@
 
   function renderChips(){
     const items = [];
-    if (state.filters.digiYes) items.push(['Bevat digitaal materiaal: Ja', ()=>{ state.filters.digiYes=false; document.querySelector('[data-filter="digi-yes"]').checked=false; }]);
-    if (state.filters.digiNo) items.push(['Bevat digitaal materiaal: Nee', ()=>{ state.filters.digiNo=false; document.querySelector('[data-filter="digi-no"]').checked=false; }]);
-    if (state.filters.restrYes) items.push(['Beperkt openbaar: Ja', ()=>{ state.filters.restrYes=false; document.querySelector('[data-filter="restr-yes"]').checked=false; }]);
-    if (state.filters.restrNo) items.push(['Beperkt openbaar: Nee', ()=>{ state.filters.restrNo=false; document.querySelector('[data-filter="restr-no"]').checked=false; }]);
+    if (state.filters.digiYes) items.push(['Online beschikbaar', ()=>{ state.filters.digiYes=false; document.querySelector('[data-filter="digi-yes"]').checked=false; }]);
+    if (state.filters.physOnly) items.push(['Alleen fysiek', ()=>{ state.filters.physOnly=false; document.querySelector('[data-filter="phys-only"]').checked=false; }]);
+    if (state.filters.restrYes) items.push(['Beperkt raadpleegbaar', ()=>{ state.filters.restrYes=false; document.querySelector('[data-filter="restr-yes"]').checked=false; }]);
     state.forms.forEach(f => items.push([`Vorm: ${f}`, ()=>{ state.forms.delete(f); document.querySelector(`[data-form="${f}"]`).checked=false; }]));
     if (state.yearMin > 1602 || state.yearMax < 1795) items.push([`${state.yearMin} – ${state.yearMax}`, ()=>{ state.yearMin=1602; state.yearMax=1795; document.getElementById('yr-from').value=1602; document.getElementById('yr-to').value=1795; }]);
     if (state.q) items.push([`Zoekterm: "${state.q}"`, ()=>{ state.q=''; searchEl.value=''; }]);
@@ -784,8 +867,9 @@
   // Filter wiring
   document.querySelectorAll('[data-filter]').forEach(cb => {
     cb.addEventListener('change', () => {
-      const map = { 'digi-yes':'digiYes','digi-no':'digiNo','restr-yes':'restrYes','restr-no':'restrNo' };
-      state.filters[map[cb.dataset.filter]] = cb.checked;
+      const map = { 'digi-yes':'digiYes','phys-only':'physOnly','restr-yes':'restrYes' };
+      const key = map[cb.dataset.filter];
+      if (key) state.filters[key] = cb.checked;
       render();
     });
   });
@@ -796,9 +880,10 @@
     });
   });
   resetBtn.addEventListener('click', ()=>{
-    state = { ...state, q:'', filters:{digiYes:false,digiNo:false,restrYes:false,restrNo:false}, forms:new Set(), yearMin:1602, yearMax:1795 };
+    state = { ...state, q:'', filters:{digiYes:false,physOnly:false,restrYes:false}, forms:new Set(), yearMin:1602, yearMax:1795 };
     document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);
     document.getElementById('yr-from').value=1602; document.getElementById('yr-to').value=1795;
+    document.getElementById('period-label').textContent='Periode';
     searchEl.value=''; render();
   });
   document.getElementById('yr-apply').addEventListener('click', ()=>{
@@ -806,6 +891,8 @@
     const t = +document.getElementById('yr-to').value || 1795;
     state.yearMin = Math.max(1602, Math.min(f,t));
     state.yearMax = Math.min(1795, Math.max(f,t));
+    document.getElementById('period-label').textContent = `${state.yearMin}–${state.yearMax}`;
+    document.getElementById('yr-apply').closest('details').open = false;
     render();
   });
   searchEl.addEventListener('input', e => { state.q = e.target.value; render(); });
